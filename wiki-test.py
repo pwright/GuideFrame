@@ -41,9 +41,9 @@ def start_ffmpeg_recording(output_file):
     # Command to start recording using FFmpeg
     command = [
         'ffmpeg',
-        '-f', 'x11grab',             # Capture X11 screen
+        '-f', 'avfoundation',             # Capture avfoundation
         '-video_size', '1920x1080',           # Set resolution; consider using '$(xdpyinfo | grep dimensions)' for dynamic resolution
-        '-i', ':1.0',                # Input display (change this if necessary)
+        '-i', '1',                # Input display (change this if necessary)
         '-c:v', 'libxvid',           # Video codec
         '-preset', 'fast',           # Preset for encoding speed
         '-framerate', '30',          # Frame rate; increase for smoother video
@@ -59,14 +59,14 @@ def start_ffmpeg_recording(output_file):
 def run_selenium_test():
     # Set up Chrome options with the user profile
     options = Options()
-    options.add_argument("/home/paoconno/.config/google-chrome/Default") 
+    options.add_argument("usr/bin/google-chrome") 
 
     # Disable the "Chrome is being controlled by automated test software" banner
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option('useAutomationExtension', False)
 
     # Specify the path to ChromeDriver
-    service = Service('/usr/bin/chromedriver')
+    service = Service('/opt/homebrew/bin/chromedriver')
 
     # Initialize the WebDriver
     driver = webdriver.Chrome(service=service, options=options)
@@ -104,7 +104,7 @@ def run_selenium_test():
         print("Test complete")
 
 if __name__ == "__main__":
-    output_file = "screen_recording.avi"
+    output_file = "screen_recording.mp4"
     
     # Start FFmpeg recording in a separate thread
     ffmpeg_process = threading.Thread(target=start_ffmpeg_recording, args=(output_file,))
