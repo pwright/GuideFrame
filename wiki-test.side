@@ -1,0 +1,73 @@
+{
+  "id": "273545c9-9496-4b85-a293-8b5fc55ee793",
+  "version": "2.0",
+  "name": "wiki-test",
+  "url": "https://www.wikipedia.org",
+  "tests": [{
+    "id": "5faf1960-5986-45d5-8131-9c5d78fd5c30",
+    "name": "test1",
+    "commands": [{
+      "id": "78c4bd45-be87-42b2-97c6-8a6d8fc0261d",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "45697a2c-9d4b-4d95-971e-10f8d8475f4d",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "2560x1372",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "30e84a75-0b9b-470a-91c0-0117a1c154b0",
+      "comment": "",
+      "command": "type",
+      "target": "id=searchInput",
+      "targets": [
+        ["id=searchInput", "id"],
+        ["name=search", "name"],
+        ["css=#searchInput", "css:finder"],
+        ["xpath=//input[@id='searchInput']", "xpath:attributes"],
+        ["xpath=//div[@id='search-input']/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "Red Hat"
+    }, {
+      "id": "53a59d66-00c8-4c30-bc22-dcae50f9c34d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.active > .suggestion-text",
+      "targets": [
+        ["css=.active > .suggestion-text", "css:finder"],
+        ["xpath=//div[@id='typeahead-suggestions']/div/a/div", "xpath:idRelative"],
+        ["xpath=//a/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5c70cde4-407f-46af-b844-fe5a9b7bcbf4",
+      "comment": "",
+      "command": "click",
+      "target": "css=.hatnote:nth-child(39) > a",
+      "targets": [
+        ["css=.hatnote:nth-child(39) > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Fedora Project')]", "xpath:link"],
+        ["xpath=//div[@id='mw-content-text']/div/div[7]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/wiki/Fedora_Project')]", "xpath:href"],
+        ["xpath=//div[7]/a", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "f2b6c805-8dd9-4be2-b6fe-c48c23192c93",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["5faf1960-5986-45d5-8131-9c5d78fd5c30"]
+  }],
+  "urls": ["https://www.wikipedia.org/"],
+  "plugins": []
+}
