@@ -8,6 +8,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+# Initial test script to verify threading the video concept.
+# This will be expanded with some form of TTS next.
+
 # Function to open a URL
 def open_url(driver, target):
     driver.get("https://www.wikipedia.org" + target)
@@ -41,15 +44,15 @@ def start_ffmpeg_recording(output_file):
     # Command to start recording using FFmpeg
     command = [
         'ffmpeg',
-        '-f', 'avfoundation',             # Capture avfoundation
-        '-video_size', '1920x1080',           # Set resolution; consider using '$(xdpyinfo | grep dimensions)' for dynamic resolution
-        '-i', '1',                # Input display (change this if necessary)
-        '-c:v', 'libxvid',           # Video codec
-        '-preset', 'fast',           # Preset for encoding speed
-        '-framerate', '30',          # Frame rate; increase for smoother video
-        '-b:v', '3000k',             # Set bitrate for better quality
-        '-pix_fmt', 'yuv420p',       # Pixel format
-        output_file                  # Output file
+        '-f', 'avfoundation',           # Capture avfoundation
+        '-video_size', '1920x1080',     # Set resolution; consider using '$(xdpyinfo | grep dimensions)' for dynamic resolution
+        '-i', '1',                      # Input display (change this if necessary)
+        '-c:v', 'libxvid',              # Video codec
+        '-preset', 'fast',              # Preset for encoding speed
+        '-framerate', '30',             # Frame rate; increase for smoother video
+        '-b:v', '3000k',                # Set bitrate for better quality
+        '-pix_fmt', 'yuv420p',          # Pixel format
+        output_file                     # Output file
     ]
     
     # Start the FFmpeg process
