@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from gtts import gTTS
+from mutagen.mp3 import MP3
 import pyttsx3
 import time
 import os
@@ -15,12 +16,21 @@ import os
 
 engine = pyttsx3.init()  # Initialize the TTS engine
 
-# Removing much of the TTS file saving for now as there are threading issues and this is purely to scaffold
-
-# pivoting to gTTS
+'''
+Pivoting to gTTS
+This has a significantly simpler design in terms of saving clips so it better serves this need that pytts
+It also sounds generally better and easily fulfills the intended logic in terms of clip generation for later splicing
+Leaving pytts in for now until clip assembly logic is in place.
+'''
 def export_gtts(text, file_name):
     tts = gTTS(text)
     tts.save(file_name)
+
+# Function to check the length of an audio clip and then sleep based on it
+def sleep_based_on_vo(file_name):
+    audio = MP3(file_name)
+    print("Sleeping for", audio.info.length, "seconds")
+    time.sleep(audio.info.length)
 
 # Function to open a URL
 def open_url(driver, target):
@@ -95,12 +105,13 @@ def run_selenium_test():
         engine.runAndWait()
 
         export_gtts("First, open wikipedia.org", "step2.mp3")
-        time.sleep(5)
+        sleep_based_on_vo("step2.mp3")
 
         # Step 3: Type "Red Hat" into the search input
         engine.say("Next, type Red Hat into the search bar")
         engine.runAndWait()
         export_gtts("Next, type Red Hat into the search bar", "step3.mp3")
+        sleep_based_on_vo("step3.mp3")
         type_into_field(driver, "searchInput", "Red Hat")
 
         # Step 4: Wait for the suggestion list to appear, then click the first suggestion
@@ -112,7 +123,7 @@ def run_selenium_test():
             engine.runAndWait()
             export_gtts("Click the suggested text", "step4.mp3")
             suggestion.click()
-            time.sleep(5)
+            sleep_based_on_vo("step4.mp3")
 
         except Exception as e:
             print(f"Error clicking suggestion: {e}")
@@ -121,8 +132,8 @@ def run_selenium_test():
         engine.say("Now click on the Fedora Project link")
         engine.runAndWait()
         export_gtts("Now click on the Fedora Project link", "step5.mp3")
+        sleep_based_on_vo("step5.mp3")
         click_element(driver, ".hatnote:nth-child(39) > a")
-        time.sleep(10)
 
     finally:
         engine.say("Guide complete")
