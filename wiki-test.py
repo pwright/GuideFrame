@@ -6,22 +6,15 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import pyttsx3  # Import the TTS library
+import pyttsx3
 import time
 import os
 
 # Initial test script to verify threading the video concept.
-# This will be expanded with some form of TTS next.
-# Testing branch configuration with Jira.
 
 engine = pyttsx3.init()  # Initialize the TTS engine
-audio_dir = "tts_audio"  # Directory to store TTS audio files
 
-def export_tts(text, filename):
-    audio_path = os.path.join(audio_dir, filename)
-    engine.save_to_file(text, audio_path)
-    engine.runAndWait()
-    return audio_path
+# Removing much of the TTS file saving for now as there are threading issues and this is purely to scaffold
 
 # Function to open a URL
 def open_url(driver, target):
@@ -61,7 +54,7 @@ def start_ffmpeg_recording(output_file):
         '-i', '1',                      # Input display (change this if necessary)
         '-c:v', 'libxvid',              # Video codec
         '-preset', 'fast',              # Preset for encoding speed
-        '-framerate', '30',             # Frame rate; increase for smoother video
+        '-framerate', '30.000000',      # Frame rate; increase for smoother video
         '-b:v', '3000k',                # Set bitrate for better quality
         '-pix_fmt', 'yuv420p',          # Pixel format
         output_file                     # Output file
@@ -139,3 +132,4 @@ if __name__ == "__main__":
         # Stop FFmpeg process
         subprocess.call(['pkill', 'ffmpeg'])
         ffmpeg_process.join()
+        exit
