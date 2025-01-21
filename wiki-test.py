@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from gtts import gTTS
 import pyttsx3
 import time
 import os
@@ -15,6 +16,11 @@ import os
 engine = pyttsx3.init()  # Initialize the TTS engine
 
 # Removing much of the TTS file saving for now as there are threading issues and this is purely to scaffold
+
+# pivoting to gTTS
+def export_gtts(text, file_name):
+    tts = gTTS(text)
+    tts.save(file_name)
 
 # Function to open a URL
 def open_url(driver, target):
@@ -88,10 +94,13 @@ def run_selenium_test():
         engine.say("First, open wikipedia.org")
         engine.runAndWait()
 
+        export_gtts("First, open wikipedia.org", "step2.mp3")
         time.sleep(5)
 
         # Step 3: Type "Red Hat" into the search input
         engine.say("Next, type Red Hat into the search bar")
+        engine.runAndWait()
+        export_gtts("Next, type Red Hat into the search bar", "step3.mp3")
         type_into_field(driver, "searchInput", "Red Hat")
 
         # Step 4: Wait for the suggestion list to appear, then click the first suggestion
@@ -101,8 +110,8 @@ def run_selenium_test():
             )
             engine.say("Click the suggested text")
             engine.runAndWait()
+            export_gtts("Click the suggested text", "step4.mp3")
             suggestion.click()
-
             time.sleep(5)
 
         except Exception as e:
@@ -111,6 +120,7 @@ def run_selenium_test():
         # Step 5: Click the link for "Fedora Project"
         engine.say("Now click on the Fedora Project link")
         engine.runAndWait()
+        export_gtts("Now click on the Fedora Project link", "step5.mp3")
         click_element(driver, ".hatnote:nth-child(39) > a")
         time.sleep(10)
 
