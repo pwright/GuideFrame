@@ -6,11 +6,15 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import pyttsx3
 import time
+import os
 
 # Initial test script to verify threading the video concept.
-# This will be expanded with some form of TTS next.
-# Testing branch configuration with Jira.
+
+engine = pyttsx3.init()  # Initialize the TTS engine
+
+# Removing much of the TTS file saving for now as there are threading issues and this is purely to scaffold
 
 # Function to open a URL
 def open_url(driver, target):
@@ -50,7 +54,7 @@ def start_ffmpeg_recording(output_file):
         '-i', '1',                      # Input display (change this if necessary)
         '-c:v', 'libxvid',              # Video codec
         '-preset', 'fast',              # Preset for encoding speed
-        '-framerate', '30',             # Frame rate; increase for smoother video
+        '-framerate', '30.000000',      # Frame rate; increase for smoother video
         '-b:v', '3000k',                # Set bitrate for better quality
         '-pix_fmt', 'yuv420p',          # Pixel format
         output_file                     # Output file
@@ -81,10 +85,13 @@ def run_selenium_test():
 
         # Step 2: Open URL
         open_url(driver, "/")
+        engine.say("First, open wikipedia.org")
+        engine.runAndWait()
 
         time.sleep(5)
 
         # Step 3: Type "Red Hat" into the search input
+        engine.say("Next, type Red Hat into the search bar")
         type_into_field(driver, "searchInput", "Red Hat")
 
         # Step 4: Wait for the suggestion list to appear, then click the first suggestion
@@ -92,6 +99,8 @@ def run_selenium_test():
             suggestion = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, ".suggestion-text"))
             )
+            engine.say("Click the suggested text")
+            engine.runAndWait()
             suggestion.click()
 
             time.sleep(5)
@@ -100,11 +109,14 @@ def run_selenium_test():
             print(f"Error clicking suggestion: {e}")
 
         # Step 5: Click the link for "Fedora Project"
+        engine.say("Now click on the Fedora Project link")
+        engine.runAndWait()
         click_element(driver, ".hatnote:nth-child(39) > a")
-
         time.sleep(10)
 
     finally:
+        engine.say("Guide complete")
+        engine.runAndWait()
         print("Test complete")
 
 if __name__ == "__main__":
@@ -120,3 +132,4 @@ if __name__ == "__main__":
         # Stop FFmpeg process
         subprocess.call(['pkill', 'ffmpeg'])
         ffmpeg_process.join()
+        exit
