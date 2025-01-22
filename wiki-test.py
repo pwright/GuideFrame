@@ -1,5 +1,8 @@
+'''
+Removing below after adding ffmpeg wrapper -> leaving as comments in to illustrate differences for now
 import subprocess # Importing the subprocess module for running FFmpeg
 import threading # Importing the threading module (not currently using it but likely will)
+'''
 from selenium import webdriver # Importing the webdriver module from selenium and other modules
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -10,6 +13,7 @@ from gtts import gTTS # Importing gTTS for audio generation (opensource based on
 from mutagen.mp3 import MP3 # Importing the MP3 module from mutagen for audio length checking
 import time # Importing the time module for sleep functions
 import os # Importing the os module for file operations (was using, likely will again but not in this commit)
+import ffmpeg # Importing the python-ffmpeg wrapper to match functionality but improve legibility
 
 # Initial test script to verify threading the video concept.
 
@@ -58,6 +62,42 @@ def type_into_field(driver, element_id, text):
     except Exception as e:
         print(f"Error typing into field with ID '{element_id}': {e}")
 
+'''
+Starts recording the screen with FFmpeg using ffmpeg-python wrapper
+We still need the process object in order to pass 'q' in order to end the recording
+The wrapper doesn't have a stop() command or an equivalent hence this combo of both versions
+'''
+def start_ffmpeg_recording(output_file):
+    print("Beginning recording of clip")
+    process = (
+        ffmpeg
+        .input(
+            '1',                      # Input display (can be changed obvs but this is my main display)
+            format='avfoundation',    # Capture avfoundation (because I'm on mac)
+            video_size='1920x1080',   # Resolution
+            framerate=30              # Frame rate
+        )
+        .output(
+            output_file,
+            vcodec='libxvid',         # Video codec
+            preset='fast',            # Preset for encoding speed
+            bitrate='3000k',          # Bitrate
+            pix_fmt='yuv420p'         # Pixel format
+        )
+        .overwrite_output()
+        .run_async(pipe_stdin=True)   # Runing asynchronously to allow interaction via stdin (the 'q' from below)
+    )
+    return process
+
+# Function to stop FFmpeg recording
+def stop_ffmpeg_recording(process):
+    process.stdin.write(b"q\n")  # Gracefully stop FFmpeg by sending 'q' to stdin as a byte string
+    process.communicate()        # Wait for process to finish
+    print("Ending recording of clip")
+
+'''
+Old ffmpeg implementation -> leaving as comments in to illustrate differences for now
+
 # Function to start FFmpeg to record the screen
 def start_ffmpeg_recording(output_file):
     # Command to start recording using FFmpeg
@@ -81,6 +121,8 @@ def start_ffmpeg_recording(output_file):
 def stop_ffmpeg_recording(process):
     process.stdin.write(b"q\n")  # Gracefully stop FFmpeg by sending 'q' to stdin as a byte string
     process.communicate()       # Wait for process to finish (again, this is to prevent carry over or timing errors)
+
+'''
 
 # Function to run the test with segmented video recording (refactored for this ticket as explained below)
 def run_selenium_test():
