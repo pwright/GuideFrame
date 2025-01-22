@@ -1,8 +1,3 @@
-'''
-Removing below after adding ffmpeg wrapper -> leaving as comments in to illustrate differences for now
-import subprocess # Importing the subprocess module for running FFmpeg
-import threading # Importing the threading module (not currently using it but likely will)
-'''
 from selenium import webdriver # Importing the webdriver module from selenium and other modules
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -11,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from gtts import gTTS # Importing gTTS for audio generation (opensource based on Google translate API)
 from mutagen.mp3 import MP3 # Importing the MP3 module from mutagen for audio length checking
+from assembly import assemble # Importing the function from the assembly script
 import time # Importing the time module for sleep functions
 import os # Importing the os module for file operations (was using, likely will again but not in this commit)
 import ffmpeg # Importing the python-ffmpeg wrapper to match functionality but improve legibility
@@ -95,34 +91,6 @@ def stop_ffmpeg_recording(process):
     process.communicate()        # Wait for process to finish
     print("Ending recording of clip")
 
-'''
-Old ffmpeg implementation -> leaving as comments in to illustrate differences for now
-
-# Function to start FFmpeg to record the screen
-def start_ffmpeg_recording(output_file):
-    # Command to start recording using FFmpeg
-    command = [
-        'ffmpeg',
-        '-f', 'avfoundation',           # Capture avfoundation
-        '-video_size', '1920x1080',     # Set resolution; consider using '$(xdpyinfo | grep dimensions)' for dynamic resolution
-        '-i', '1',                      # Input display (change this if necessary)
-        '-c:v', 'libxvid',              # Video codec
-        '-preset', 'fast',              # Preset for encoding speed
-        '-framerate', '30.000000',      # Frame rate; increase for smoother video
-        '-b:v', '3000k',                # Set bitrate for better quality
-        '-pix_fmt', 'yuv420p',          # Pixel format
-        output_file                     # Output file
-    ]
-    
-    # Start the FFmpeg process (Popen allows communication via stdin)
-    return subprocess.Popen(command, stdin=subprocess.PIPE)
-
-# Function to stop FFmpeg recording
-def stop_ffmpeg_recording(process):
-    process.stdin.write(b"q\n")  # Gracefully stop FFmpeg by sending 'q' to stdin as a byte string
-    process.communicate()       # Wait for process to finish (again, this is to prevent carry over or timing errors)
-
-'''
 
 # Function to run the test with segmented video recording (refactored for this ticket as explained below)
 def run_selenium_test():
@@ -151,10 +119,10 @@ def run_selenium_test():
     This will obviously require some finessing but will serve for now.
     '''
     try:
-        # Step 1 - Start recording
-        recording1 = start_ffmpeg_recording("step1.mp4")
+        # Step 1 - Start recording (not recording here because the lack of audio causes issues)
+        # recording1 = start_ffmpeg_recording("step1.mp4")
         set_window_size(driver)
-        stop_ffmpeg_recording(recording1)
+        # stop_ffmpeg_recording(recording1)
 
         # Step 2 - Open Wikipedia
         recording2 = start_ffmpeg_recording("step2.mp4")
@@ -198,3 +166,4 @@ def run_selenium_test():
 if __name__ == "__main__":
     # Run the function
     run_selenium_test()
+    assemble()
