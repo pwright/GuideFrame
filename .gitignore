@@ -7,3 +7,5 @@ tts_audio
 lib
 bin
 include
+__pycache__
+.vscode
