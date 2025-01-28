@@ -4,31 +4,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from gtts import gTTS # Importing gTTS for audio generation (opensource based on Google translate API)
-from mutagen.mp3 import MP3 # Importing the MP3 module from mutagen for audio length checking
 from assembly import assemble # Importing the function from the assembly script
-import time # Importing the time module for sleep functions
-import os # Importing the os module for file operations (was using, likely will again but not in this commit)
-import ffmpeg # Importing the python-ffmpeg wrapper to match functionality but improve legibility
+from audio import export_gtts, sleep_based_on_vo
+from video import start_ffmpeg_recording, stop_ffmpeg_recording
 
 # Initial test script to verify threading the video concept.
-
-'''
-Pivoting to gTTS
-This has a significantly simpler design in terms of saving clips so it better serves this need that pytts
-It also sounds generally better and easily fulfills the intended logic in terms of clip generation for later splicing
-Leaving pytts in for now until clip assembly logic is in place.
-'''
-def export_gtts(text, file_name):
-    tts = gTTS(text)
-    tts.save(file_name)
-    print("Exported", file_name)
-
-# Function to check the length of an audio clip and then sleep based on it
-def sleep_based_on_vo(file_name):
-    audio = MP3(file_name)
-    print("Sleeping for", audio.info.length, "seconds")
-    time.sleep(audio.info.length)
 
 # Function to open a URL
 def open_url(driver, target):
@@ -57,39 +37,6 @@ def type_into_field(driver, element_id, text):
         input_field.send_keys(text)
     except Exception as e:
         print(f"Error typing into field with ID '{element_id}': {e}")
-
-'''
-Starts recording the screen with FFmpeg using ffmpeg-python wrapper
-We still need the process object in order to pass 'q' in order to end the recording
-The wrapper doesn't have a stop() command or an equivalent hence this combo of both versions
-'''
-def start_ffmpeg_recording(output_file):
-    print("Beginning recording of clip")
-    process = (
-        ffmpeg
-        .input(
-            '1',                      # Input display (can be changed obvs but this is my main display)
-            format='avfoundation',    # Capture avfoundation (because I'm on mac)
-            video_size='1920x1080',   # Resolution
-            framerate=30              # Frame rate
-        )
-        .output(
-            output_file,
-            vcodec='libxvid',         # Video codec
-            preset='fast',            # Preset for encoding speed
-            bitrate='3000k',          # Bitrate
-            pix_fmt='yuv420p'         # Pixel format
-        )
-        .overwrite_output()
-        .run_async(pipe_stdin=True)   # Runing asynchronously to allow interaction via stdin (the 'q' from below)
-    )
-    return process
-
-# Function to stop FFmpeg recording
-def stop_ffmpeg_recording(process):
-    process.stdin.write(b"q\n")  # Gracefully stop FFmpeg by sending 'q' to stdin as a byte string
-    process.communicate()        # Wait for process to finish
-    print("Ending recording of clip")
 
 
 # Function to run the test with segmented video recording (refactored for this ticket as explained below)
@@ -166,4 +113,4 @@ def run_selenium_test():
 if __name__ == "__main__":
     # Run the function
     run_selenium_test()
-    assemble()
+    assemble(5)
