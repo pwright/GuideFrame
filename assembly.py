@@ -47,10 +47,11 @@ def combine_all_videos(output_files, final_output):
         os.remove(file_list)
 
 
-# Combine individual video and audio for each step (obviously needs error handling etc but will do for now)
-def assemble():
+# Combine individual video and audio for each step (obviously needs error handling etc but will do for now) (now taking in a number of clips rather than hardcoding in aid of tutors test)
+def assemble(number_of_steps):
     # Combine individual video and audio for each step by iterating through files and passing to above functions
-    for i in range(1, 6):
+    clip_number = number_of_steps + 1
+    for i in range(1, clip_number):
         video_file = f"step{i}.mp4"
         audio_file = f"step{i}.mp3"
         output_file = f"output_step{i}.mp4"
@@ -58,14 +59,14 @@ def assemble():
         assemble_audio_video(video_file, audio_file, output_file)
 
     # Now that all video/audio combinations are complete, combine the output videos into the final one
-    output_files = [f"output_step{i}.mp4" for i in range(1, 6)]
+    output_files = [f"output_step{i}.mp4" for i in range(1, clip_number)]
     combine_all_videos(output_files, "final_output.mp4")
 
     # Check if final_output exists and if so, clean up temporary files (the various mp3 and mp4 files we created)
     if os.path.exists("final_output.mp4"):
         print("Final output created. Cleaning up temporary files...")
         # Cleanup loop
-        for i in range(1, 6):
+        for i in range(1, clip_number):
             step_video = f"step{i}.mp4"
             step_audio = f"step{i}.mp3"
             output_step = f"output_step{i}.mp4"
