@@ -108,3 +108,14 @@ def click_element(driver, css_selector):
         element.click()
     except Exception as e:
         print(f"Error clicking element with selector '{css_selector}': {e}")
+
+
+# Function to type into an input field using an ID with error handling
+def type_into_field(driver, element_id, text):
+    try:
+        input_field = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, element_id))
+        )
+        input_field.send_keys(text)
+    except Exception as e:
+        print(f"Error typing into field with ID '{element_id}': {e}")
