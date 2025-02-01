@@ -8,6 +8,10 @@ from assembly import assemble # Importing the function from the assembly script
 from audio import export_gtts, sleep_based_on_vo
 from video import start_ffmpeg_recording, stop_ffmpeg_recording
 
+
+'''
+This is now deprecated but will remain to demonstrate progress
+'''
 # Initial test script to verify threading the video concept.
 
 # Function to open a URL
