@@ -27,6 +27,7 @@ def start_ffmpeg_recording(output_file):
     )
     return process
 
+
 # Function to stop FFmpeg recording
 def stop_ffmpeg_recording(process):
     process.stdin.write(b"q\n")  # Gracefully stop FFmpeg by sending 'q' to stdin as a byte string

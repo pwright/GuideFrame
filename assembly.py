@@ -1,7 +1,12 @@
 import ffmpeg
 import os
 
-# Combinging audio and video via wrapper
+'''
+This script contains the logic used to assemble the audio and video per-step before a final assembly of all clips
+before a cleanup occurs to remove the various created files. This will likely change as we move towards attempting 
+containerisation/headless. In any case, this is the logic as of sprint 1 ending.
+'''
+# Combinging audio and video via wrapper (wrapper aids legibility and removes need for subprocess)
 def assemble_audio_video(video_file, audio_file, output_file):
     # Check that both files exist
     if os.path.exists(video_file) and os.path.exists(audio_file):
@@ -21,6 +26,7 @@ def assemble_audio_video(video_file, audio_file, output_file):
             print(f"Error combining {video_file} and {audio_file}: {error_output}")
     else:
         print(f"Missing video or audio file: {video_file}, {audio_file}")
+
 
 # Combining all of the audio + video combinations (result of the above)
 def combine_all_videos(output_files, final_output):
