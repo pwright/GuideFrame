@@ -25,11 +25,33 @@ else:
     print("No environment argument provided. Use 'macos' or 'github'.")
     sys.exit(1)
 
+# Function to run a step in the guide, passing all previously hard coded actions as params
+def guide_step(step_number, voiceover, *actions, order="action-after-vo"):
+    # Start the recording for the step
+    step = start_ffmpeg_recording(f"step{step_number}.mp4", input_format, input_display)
+    # Conditional logic to account for vo relative to action
+    if order == "action-before-vo":
+        for action in actions:
+            action()
+            time.sleep(1)
+        export_gtts(voiceover, f"step{step_number}.mp3")
+        sleep_based_on_vo(f"step{step_number}.mp3")
+    # Default value for order is after-vo
+    if order == "action-after-vo":
+        export_gtts(voiceover, f"step{step_number}.mp3")
+        sleep_based_on_vo(f"step{step_number}.mp3")
+        for action in actions:
+            action()
+            time.sleep(1)
+    stop_ffmpeg_recording(step)
+
 '''
-As of GUIDEFRAME-15, selenium functions have moved to external script. This is to facilitate greater
-legibility of main file for ease of use. The intention is to approach the selenium material like an SDK-lite
-where documentation will outline the selenium functions and their args without the need to worry about try-catch,
-selenium syntax etc. This is simply the first step in that process.
+As of GUIDEFRAME-13, implemented during sprint 2, the script has been refactored via new function
+guide_steps() which passes the step number, string for VO, action(s) and order of action relative to VO.
+This greatly reduces the amount of code required to run the walkthrough and makes it more legible.
+If GUIDEFRAME-25 is successfully implemented, the string will be replaced by another function call, 
+further enhancing the legibility of the script. Of note, this doesn't prevent a user from hard-coding 
+the steps if they wish to further customise the interactions.
 '''
 
 # Function to run the main walkthrough section
@@ -49,93 +71,91 @@ def guideframe_script():
         '''
         Step 1 - Open Tutors
         '''
-        recording1 = start_ffmpeg_recording("step1.mp4", input_format, input_display)
-        export_gtts("First, let's open tutors.dev. On this page we see the web toolkit, in addition to any courses we may recently have accessed.", "step1.mp3")
-        # sleep_based_on_vo("step1.mp3") # removed to test pacing
-        stop_ffmpeg_recording(recording1)
-
+        guide_step(
+            1, 
+            "First, let's open tutors.dev. On this page we see the web toolkit, in addition to any courses we may recently have accessed.", 
+            lambda: None
+            )
+        
         '''
         Step 2 - setting dark mode
         '''
-        recording2 = start_ffmpeg_recording("step2.mp4", input_format, input_display)
-        export_gtts("Before we go any further, let's change to dark mode using the layout button in the top right of the screen", "step2.mp3")
-        # sleep_based_on_vo("step2.mp3") # removed to test pacing
-        # clicking layout button
-        click_element(driver, "span.ml-2.hidden.text-sm.font-bold.md\\:block")
-        time.sleep(2)  # Wait for the navigation to complete
-        # clicking the dark mode button
-        click_element(driver, "label[data-testid='segment-item']")
-        time.sleep(2)  # Wait for the navigation to complete
-        # clicking layout button again to close
-        click_element(driver, "span.ml-2.hidden.text-sm.font-bold.md\\:block")
-        stop_ffmpeg_recording(recording2)
+        guide_step(
+            2,
+            "Before we go any further, let's change to dark mode using the layout button in the top right of the screen",
+            lambda: click_element(driver, "span.ml-2.hidden.text-sm.font-bold.md\\:block"),
+            lambda: click_element(driver, "label[data-testid='segment-item']"),
+            lambda: click_element(driver, "span.ml-2.hidden.text-sm.font-bold.md\\:block")
+            )
 
         '''
         Step 3 - navigating to the docs page
         '''
-        recording3 = start_ffmpeg_recording("step3.mp4", input_format, input_display)
-        export_gtts("Now that we're in dark mode, let's navigate to the docs page by clicking the docs button under the web toolkit", "step3.mp3")
-        # sleep_based_on_vo("step3.mp3") # removed to test pacing
-        # hovering over and clicking the docs link
-        hover_and_click(driver, "/course/tutors-reference-manual")
-        # time.sleep(2)
-        stop_ffmpeg_recording(recording3)
+        guide_step(
+            3,
+            "Now that we're in dark mode, let's navigate to the docs page by clicking the docs button under the web toolkit",
+            lambda: hover_and_click(driver, "/course/tutors-reference-manual")
+            )
 
         '''
         Step 4 - Docs page intro
         '''
-        recording4 = start_ffmpeg_recording("step4.mp4", input_format, input_display)
-        export_gtts("On the docs page, we can see a number of cards. Each of these cards leads to a specific portion of the getting started guide.", "step4.mp3")
-        # sleep_based_on_vo("step4.mp3") # removed to test pacing
-        stop_ffmpeg_recording(recording4)
+        guide_step(
+            4,
+            "On the docs page, we can see a number of cards. Each of these cards leads to a specific portion of the getting started guide.",
+            lambda: None
+            )
 
         '''
         Step 5 - Hovering over the first card
         '''
-        recording5 = start_ffmpeg_recording("step5.mp4", input_format, input_display)
-        hover_over_element(driver, "/note/tutors-reference-manual/unit-0-getting-started/note-01-getting-started")
-        export_gtts("The getting started card introduces the basic design model of tutors.", "step5.mp3")
-        sleep_based_on_vo("step5.mp3")
-        stop_ffmpeg_recording(recording5)
+        guide_step(
+            5,
+            "The getting started card introduces the basic design model of tutors.",
+            lambda: hover_over_element(driver, "/note/tutors-reference-manual/unit-0-getting-started/note-01-getting-started"),
+            order="action-before-vo"
+            )
 
         '''
         Step 6 - Hovering over the second card
         '''
-        recording6 = start_ffmpeg_recording("step6.mp4", input_format, input_display)
-        hover_over_element(driver, "/course/tutors-starter-course")
-        export_gtts("The simple starter card provides a helpful template course.", "step6.mp3")
-        sleep_based_on_vo("step6.mp3")
-        stop_ffmpeg_recording(recording6)
+        guide_step(
+            6,
+            "The simple starter card provides a helpful template course.",
+            lambda: hover_over_element(driver, "/course/tutors-starter-course"),
+            order="action-before-vo"
+            )
 
         '''
         Step 7 - Hovering over the third card
         '''
-        recording7 = start_ffmpeg_recording("step7.mp4", input_format, input_display)
-        hover_over_element(driver, "/course/layout-reference-course")
-        export_gtts("The alternative starter card provides an example course to demonstrate layouts and nesting.", "step7.mp3")
-        sleep_based_on_vo("step7.mp3")
-        stop_ffmpeg_recording(recording7)
+        guide_step(
+            7,
+            "The alternative starter card provides an example course to demonstrate layouts and nesting.",
+            lambda: hover_over_element(driver, "/course/layout-reference-course"),
+            order="action-before-vo"
+            )
 
         '''
         Step 8 - Hovering over the fourth card
         '''
-        recording8 = start_ffmpeg_recording("step8.mp4", input_format, input_display)
-        scroll_to_element(driver, "/course/reference-course")
-        hover_over_element(driver, "/course/reference-course")
-        export_gtts("The reference course contains another example course. This one contains all Tutors learning objects for demonstration.", "step8.mp3")
-        sleep_based_on_vo("step8.mp3")
-        stop_ffmpeg_recording(recording8)
+        guide_step(
+            8,
+            "The reference course contains another example course. This one contains all Tutors learning objects for demonstration.",
+            lambda: scroll_to_element(driver, "/course/reference-course"),
+            lambda: hover_over_element(driver, "/course/reference-course"),
+            order="action-before-vo"
+            )
 
         '''
         Step 9 - Retuning to the original card
         '''
-        recording9 = start_ffmpeg_recording("step9.mp4", input_format, input_display)
-        scroll_to_element(driver, "/note/tutors-reference-manual/unit-0-getting-started/note-01-getting-started")
-        hover_and_click(driver, "/note/tutors-reference-manual/unit-0-getting-started/note-01-getting-started")
-        export_gtts("Finally, let's return to the getting started card and click it to demonstrate the getting started page.", "step9.mp3")
-        sleep_based_on_vo("step9.mp3")
-        print("End of test")
-        stop_ffmpeg_recording(recording9)
+        guide_step(
+            9,
+            "Finally, let's return to the getting started card and click it to demonstrate the getting started page.",
+            lambda: scroll_to_element(driver, "/note/tutors-reference-manual/unit-0-getting-started/note-01-getting-started"),
+            lambda: hover_and_click(driver, "/note/tutors-reference-manual/unit-0-getting-started/note-01-getting-started")
+            )
 
     finally:
         print("Test complete -> moving to assembly")
