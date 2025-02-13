@@ -39,7 +39,14 @@ def open_url(driver, target):
 
 # Function to set window size
 def set_window_size(driver):
-    driver.maximize_window()
+    # Try block added for GUIDEFRAME-30
+    try:
+        driver.maximize_window()
+    # If an exception is caught, manually set the window size
+    except Exception as e:
+        print("Error maximizing window:", e)
+        print("Setting window size to 1920x1080")
+        driver.set_window_size(1920, 1080)
 
 
 # Function to find an element by its id
@@ -62,7 +69,6 @@ def scroll_to_element(driver, href):
             EC.presence_of_element_located((By.XPATH, f"//a[@href='{href}']"))
         )
         driver.execute_script("arguments[0].scrollIntoView()", element)
-
 
     except Exception as e:
         print(f"Error in scroll_to_element for href '{href}': {e}")
@@ -96,7 +102,7 @@ def hover_over_element(driver, href):
         actions.move_to_element(element).perform()
 
     except Exception as e:
-        print(f"Error in hover_and_click for href '{href}': {e}")
+        print(f"Error in hover_over_element for href '{href}': {e}")
 
 
 # Function to click an element using a CSS selector with error handling
@@ -119,3 +125,5 @@ def type_into_field(driver, element_id, text):
         input_field.send_keys(text)
     except Exception as e:
         print(f"Error typing into field with ID '{element_id}': {e}")
+
+
