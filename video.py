@@ -10,10 +10,10 @@ def start_ffmpeg_recording(output_file, input_format, input_display):
     print("Beginning recording of clip")
     command = [
         'ffmpeg',
-        '-f', input_format,              # Input format for macOS
+        '-f', input_format,           # Input format for macOS
         '-video_size', '1920x1080',   # Resolution
-        '-framerate', '24',           # Frame rate
-        '-i', input_display,                # Input display (1 or :99.0 for GitHub actions)
+        '-framerate', '30',           # Frame rate
+        '-i', input_display,          # Input display (1 or :99.0 for GitHub actions)
         '-vcodec', 'libxvid',         # Video codec
         '-preset', 'fast',            # Preset for encoding speed
         '-b:v', '3000k',              # Bitrate

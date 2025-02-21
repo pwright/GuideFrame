@@ -1,66 +1,14 @@
-import sys # Importing the sys module to access system arguments
 from selenium_functions import * # Moved all selenium functions to external file
 import time  # Importing the time module for sleep functions
 from assembly import assemble  # Importing the assemble_clips function from assembly.py
-from audio import export_gtts, sleep_based_on_vo, pull_vo_from_markdown  # Importing the export_gtts and sleep_based_on_vo functions from audio.py
-from video import start_ffmpeg_recording, stop_ffmpeg_recording  # Importing the start_ffmpeg_recording and stop_ffmpeg_recording functions from video.py
+from guideframe_utils import guide_step, get_env_settings  # Importing the guide_step and get_env_settings functions from guideframe_utils.py
 
-# Setting the environment based on the system argument (default arg must be 1 hence > 1)
-if len(sys.argv) > 1:
-    env = sys.argv[1]  # Getting the environment argument
-
-    # Setting the input format and display based on the environment argument
-    if env == "macos": # My local environment
-        input_format = 'avfoundation'
-        input_display = '1'
-        driver_location = '/opt/homebrew/bin/chromedriver'
-    elif env == "github": # GitHub Actions environment
-        input_format = 'x11grab'
-        input_display = ':99.0'
-        driver_location = '/usr/bin/chromedriver'
-    else:
-        print("Invalid environment specified. Use 'macos' or 'github'.")
-        sys.exit(1)
-else:
-    print("No environment argument provided. Use 'macos' or 'github'.")
-    sys.exit(1)
-
-# Function to run a step in the guide
-def guide_step(step_number, *actions, order="action-after-vo"):
-    # Extract voiceover text from the .md file (hard coded for now as each test will need this function defined)
-    md_file = "tutors-test.md"
-    voiceover = pull_vo_from_markdown(md_file, step_number) # Passing the step number and file to the regex based function
-
-    if not voiceover:
-        print(f"Warning: No content found for Step {step_number}")
-        return
-
-    # Start the recording for the step
-    step = start_ffmpeg_recording(f"step{step_number}.mp4", input_format, input_display)
-
-    # Conditional logic to account for vo relative to action
-    if order == "action-before-vo":
-        for action in actions:
-            action()
-            time.sleep(1)
-        export_gtts(voiceover, f"step{step_number}.mp3")
-        sleep_based_on_vo(f"step{step_number}.mp3")
-    else:  # Default order is action-after-vo
-        export_gtts(voiceover, f"step{step_number}.mp3")
-        sleep_based_on_vo(f"step{step_number}.mp3")
-        for action in actions:
-            action()
-            time.sleep(1)
-
-    stop_ffmpeg_recording(step)
 
 '''
-As of GUIDEFRAME-13, implemented during sprint 2, the script has been refactored via new function
-guide_steps() which passes the step number, string for VO, action(s) and order of action relative to VO.
-This greatly reduces the amount of code required to run the walkthrough and makes it more legible.
-If GUIDEFRAME-25 is successfully implemented, the string will be replaced by another function call, 
-further enhancing the legibility of the script. Of note, this doesn't prevent a user from hard-coding 
-the steps if they wish to further customise the interactions.
+As of GUIDEFRAME-31 as much logic as possible has been moved to external files to aid legibility
+and promote the ability to have easily create a new test without having to adjust the GuideFrame logic itself.
+This version also features the markdown extraction logic from the audio.py file in addition to a utils function for grabbing
+env variables related to inputs for the ffmpeg recording.
 '''
 
 # Function to run the main walkthrough section
@@ -72,6 +20,8 @@ def guideframe_script():
         '''
         Setup - Setup driver and Open Tutors.dev and set window size etc
         '''
+        env_settings = get_env_settings()  # Getting the environment settings
+        driver_location = env_settings["driver_location"]  # Getting the driver location from the settings
         driver = driver_setup(driver_location) # Initializing driver as the return value from the setup function in selenium script
         set_window_size(driver)
         open_url(driver, "https://tutors.dev")

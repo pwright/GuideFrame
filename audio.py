@@ -47,3 +47,19 @@ def pull_vo_from_markdown(md_file, step_number):
 
     # Return the content under the step heading if found
     return match.group(1).strip() if match else None
+
+
+# Function to generate the voiceover (in order to avoid repetition in main script)
+def generate_voicover(md_file, step_number):
+    # Extract voiceover text from the .md file (hard coded for now as each test will need this function defined)
+    voiceover = pull_vo_from_markdown(md_file, step_number) # Passing the step number and file to the regex based function
+
+    # Check if content was found
+    if not voiceover:
+        print(f"Warning: No content found for Step {step_number}")
+        return
+
+    # Export the voiceover to an MP3 file
+    export_gtts(voiceover, f"step{step_number}.mp3")
+    # Sleeping based on the length of the voiceover
+    sleep_based_on_vo(f"step{step_number}.mp3")
