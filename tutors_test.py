@@ -1,5 +1,4 @@
 from selenium_functions import * # Moved all selenium functions to external file
-import time  # Importing the time module for sleep functions
 from assembly import assemble  # Importing the assemble_clips function from assembly.py
 from guideframe_utils import guide_step, get_env_settings  # Importing the guide_step and get_env_settings functions from guideframe_utils.py
 
@@ -15,7 +14,6 @@ env variables related to inputs for the ffmpeg recording.
 def guideframe_script():
     # Main walkthrough logic here divided into steps etc (will hopefully be more legible after future refactors)
     #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
     try:
         '''
         Setup - Setup driver and Open Tutors.dev and set window size etc
@@ -25,7 +23,6 @@ def guideframe_script():
         driver = driver_setup(driver_location) # Initializing driver as the return value from the setup function in selenium script
         set_window_size(driver)
         open_url(driver, "https://tutors.dev")
-        time.sleep(2)  # Give the page time to load
 
         '''
         Step 1 - Open Tutors
@@ -108,7 +105,7 @@ def guideframe_script():
             )
 
     finally:
-        print("Test complete -> moving to assembly")
+        print("Script complete -> moving to assembly")
         driver.quit()
 
 # End of walkthrough section

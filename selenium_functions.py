@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from time import sleep
 
 '''
 For GUIDEFRAME-15 selenium functionality has been broken out into a separate script
@@ -18,6 +19,7 @@ def driver_setup(driver_location):
     # Setting up with Chrome options and the ChromeDriver service
     options = Options()
     options.add_argument("usr/bin/google-chrome")
+    options.add_argument("--incognito")
 
     # Disable the "Chrome is being controlled by automated test software" banner
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -35,6 +37,7 @@ def driver_setup(driver_location):
 # Function to open a URL
 def open_url(driver, target):
     driver.get(target)
+    sleep(2)  # Give the page time to load
 
 
 # Function to set window size
@@ -105,7 +108,7 @@ def hover_over_element(driver, href):
         print(f"Error in hover_over_element for href '{href}': {e}")
 
 
-# Function to click an element using a CSS selector with error handling
+# Function to click an element using a CSS selector
 def click_element(driver, css_selector):
     try:
         element = WebDriverWait(driver, 10).until(
@@ -116,7 +119,7 @@ def click_element(driver, css_selector):
         print(f"Error clicking element with selector '{css_selector}': {e}")
 
 
-# Function to type into an input field using an ID with error handling
+# Function to type into an input field using an ID
 def type_into_field(driver, element_id, text):
     try:
         input_field = WebDriverWait(driver, 10).until(
@@ -127,3 +130,59 @@ def type_into_field(driver, element_id, text):
         print(f"Error typing into field with ID '{element_id}': {e}")
 
 
+# Function to open a link in a new tab
+def open_link_in_new_tab(driver, href):
+    try:
+        # Open the link in a new tab
+        driver.execute_script(f"window.open('{href}', '_blank');")
+        
+        # Switch to the newly opened tab
+        driver.switch_to.window(driver.window_handles[-1])
+    except Exception as e:
+        print(f"Error opening link '{href}' in a new tab: {e}")
+
+
+# Function to switch between browser tabs using index as an arg
+def switch_to_tab(driver, tab_index):
+    try:
+        if 0 <= tab_index < len(driver.window_handles):
+            driver.switch_to.window(driver.window_handles[tab_index])
+        else:
+            print(f"Invalid tab index: {tab_index}")
+    except Exception as e:
+        print(f"Error switching to tab {tab_index}: {e}")
+
+
+# Function to take a screenshot (mainly for testing but could be useful)
+def take_screenshot(driver, file_name="screenshot.png"):
+    try:
+        driver.save_screenshot(file_name)
+    except Exception as e:
+        print(f"Error taking screenshot: {e}")
+
+from selenium.webdriver.support.ui import Select
+
+
+# Function to select a dropdown option by visible text
+def select_dropdown_option(driver, dropdown_id, visible_text):
+    try:
+        dropdown = Select(WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, dropdown_id))
+        ))
+        dropdown.select_by_visible_text(visible_text)
+        print(f"Selected dropdown option: {visible_text}")
+    except Exception as e:
+        print(f"Error selecting dropdown option '{visible_text}': {e}")
+
+
+# Function to click a button by the text of a span element (useful for cookie popups etc)
+def click_button_by_span_text(driver, span_text):
+    try:
+        # XPath to find a button containing a span with the given text
+        button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, f"//button[span[text()='{span_text}']]"))
+        )
+        button.click()
+        print(f"Clicked button with span text: '{span_text}'")
+    except Exception as e:
+        print(f"Error clicking button with span text '{span_text}': {e}")
