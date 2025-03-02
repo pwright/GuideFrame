@@ -34,10 +34,6 @@ def selenium_automation_tests():
     click_element(driver, "a[href='https://magento.softwaretestingboard.com/gear/fitness-equipment.html']")
     time.sleep(2)
 
-    # Hover over the Yoga companion kit product
-    hover_over_element(driver, "https://magento.softwaretestingboard.com/sprite-yoga-companion-kit.html")
-    time.sleep(2)
-
     # Hover over the yoga straps product
     hover_over_element(driver, "https://magento.softwaretestingboard.com/set-of-sprite-yoga-straps.html")
     time.sleep(2)
