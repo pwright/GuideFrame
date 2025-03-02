@@ -34,6 +34,11 @@ def extract_md_filename():
     script_name = sys.argv[0]
     return script_name.replace(".py", ".md")
 
+# Function to extract the script name and drop the extension (for use in final output naming)
+def extract_script_name():
+    script_name = sys.argv[0]
+    return script_name.replace(".py", "")
+
 # Function to run a step in the guide
 def guide_step(step_number, *actions, order="action-after-vo"):
     # Get the environment settings
