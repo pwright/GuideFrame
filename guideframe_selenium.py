@@ -1,4 +1,5 @@
 from selenium import webdriver  # Importing the webdriver module from selenium and other modules
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -61,7 +62,7 @@ def find_element(driver, id):
         return element
     except Exception as e:
         print(f"Error finding element with ID '{id}': {e}")
-        return None
+        raise
 
 
 # Function to scroll to an element using a href
@@ -75,6 +76,7 @@ def scroll_to_element(driver, href):
 
     except Exception as e:
         print(f"Error in scroll_to_element for href '{href}': {e}")
+        raise
 
 
 # Function to hover over a href element and click it (ideal for link buttons)
@@ -92,6 +94,7 @@ def hover_and_click(driver, href):
         element.click()
     except Exception as e:
         print(f"Error in hover_and_click for href '{href}': {e}")
+        raise
 
 
 # Function to hover over an href element (ideal for link buttons)
@@ -106,6 +109,7 @@ def hover_over_element(driver, href):
 
     except Exception as e:
         print(f"Error in hover_over_element for href '{href}': {e}")
+        raise
 
 
 # Function to click an element using a CSS selector
@@ -117,6 +121,7 @@ def click_element(driver, css_selector):
         element.click()
     except Exception as e:
         print(f"Error clicking element with selector '{css_selector}': {e}")
+        raise
 
 
 # Function to type into an input field using an ID
@@ -128,6 +133,7 @@ def type_into_field(driver, element_id, text):
         input_field.send_keys(text)
     except Exception as e:
         print(f"Error typing into field with ID '{element_id}': {e}")
+        raise
 
 
 # Function to open a link in a new tab
@@ -140,6 +146,7 @@ def open_link_in_new_tab(driver, href):
         driver.switch_to.window(driver.window_handles[-1])
     except Exception as e:
         print(f"Error opening link '{href}' in a new tab: {e}")
+        raise
 
 
 # Function to switch between browser tabs using index as an arg
@@ -151,6 +158,7 @@ def switch_to_tab(driver, tab_index):
             print(f"Invalid tab index: {tab_index}")
     except Exception as e:
         print(f"Error switching to tab {tab_index}: {e}")
+        raise
 
 
 # Function to take a screenshot (mainly for testing but could be useful)
@@ -159,9 +167,7 @@ def take_screenshot(driver, file_name="screenshot.png"):
         driver.save_screenshot(file_name)
     except Exception as e:
         print(f"Error taking screenshot: {e}")
-
-from selenium.webdriver.support.ui import Select
-
+        raise
 
 # Function to select a dropdown option by visible text
 def select_dropdown_option(driver, dropdown_id, visible_text):
@@ -173,6 +179,7 @@ def select_dropdown_option(driver, dropdown_id, visible_text):
         print(f"Selected dropdown option: {visible_text}")
     except Exception as e:
         print(f"Error selecting dropdown option '{visible_text}': {e}")
+        raise
 
 
 # Function to click a button by the text of a span element (useful for cookie popups etc)
@@ -186,3 +193,4 @@ def click_button_by_span_text(driver, span_text):
         print(f"Clicked button with span text: '{span_text}'")
     except Exception as e:
         print(f"Error clicking button with span text '{span_text}': {e}")
+        raise
