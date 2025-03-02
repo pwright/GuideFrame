@@ -1,10 +1,11 @@
 import ffmpeg
 import os
+import uuid 
+from guideframe_utils import extract_script_name
 
 '''
-This script contains the logic used to assemble the audio and video per-step before a final assembly of all clips
-before a cleanup occurs to remove the various created files. This will likely change as we move towards attempting 
-containerisation/headless. In any case, this is the logic as of sprint 1 ending.
+The assembly.py file contains the functions to combine the audio and video files into a single video file
+and perform any necessary cleanup. It interacts exensively with the audio functions and the utils to achieve this.
 '''
 # Combinging audio and video via wrapper (wrapper aids legibility and removes need for subprocess)
 def assemble_audio_video(video_file, audio_file, output_file):
@@ -66,10 +67,15 @@ def assemble(number_of_steps):
 
     # Now that all video/audio combinations are complete, combine the output videos into the final one
     output_files = [f"output_step{i}.mp4" for i in range(1, clip_number)]
-    combine_all_videos(output_files, "final_output.mp4")
+    # Now using the extract_script_name function from guideframe_utils.py to get the script name
+    script_name = extract_script_name()
+    # Creating a unique filename for the final output file via uuid and the extracted script name
+    output_filename = f"{script_name}_{uuid.uuid4().hex[:6]}.mp4"
+    # Combining all the videos into the final output as a single video
+    combine_all_videos(output_files, output_filename)
 
     # Check if final_output exists and if so, clean up temporary files (the various mp3 and mp4 files we created)
-    if os.path.exists("final_output.mp4"):
+    if os.path.exists(output_filename):
         print("Final output created. Cleaning up temporary files...")
         # Cleanup loop
         for i in range(1, clip_number):
