@@ -37,4 +37,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: tutors-test
-        path: ./final_output.mp4
+        path: ./tutors_test*.mp4
