@@ -2,7 +2,7 @@ ffmpeg
 xvfb
 chromium-driver
 chromium-browser
-pip install selenium
+selenium
 ffmpeg-python
 mutagen
 gTTS

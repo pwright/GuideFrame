@@ -1,5 +1,5 @@
-from selenium_functions import * # Importing all functions from selenium_functions.py
-from assembly import assemble  # Importing the assemble_clips function from assembly.py
+from guideframe_selenium import * # Importing all functions from selenium_functions.py
+from guideframe_assembly import assemble  # Importing the assemble_clips function from assembly.py
 from guideframe_utils import get_env_settings, guide_step  # Importing the guide_step and get_env_settings functions from guideframe_utils.py
 
 
