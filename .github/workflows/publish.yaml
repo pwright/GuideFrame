@@ -39,4 +39,7 @@ jobs:
       - name: Build and Publish to PyPI
         run: |
           poetry build
-          poetry publish --no-interaction
+          
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
