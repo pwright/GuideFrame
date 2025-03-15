@@ -1,5 +1,5 @@
-from guideframe_audio import generate_voicover
-from guideframe_video import start_ffmpeg_recording, stop_ffmpeg_recording
+from guideframe.audio import generate_voicover
+from guideframe.video import start_ffmpeg_recording, stop_ffmpeg_recording
 import time
 import sys
 

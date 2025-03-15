@@ -1,7 +1,7 @@
 import ffmpeg
 import os
 import uuid 
-from guideframe_utils import extract_script_name
+from guideframe.utils import extract_script_name
 
 '''
 The assembly.py file contains the functions to combine the audio and video files into a single video file

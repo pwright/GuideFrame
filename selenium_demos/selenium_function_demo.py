@@ -1,6 +1,6 @@
-from guideframe_selenium import * # Importing all functions from selenium_functions.py
-from guideframe_assembly import assemble  # Importing the assemble_clips function from assembly.py
-from guideframe_utils import get_env_settings, guide_step  # Importing the guide_step and get_env_settings functions from guideframe_utils.py
+from guideframe.selenium import * # Importing all functions from selenium_functions.py
+from guideframe.assembly import assemble  # Importing the assemble_clips function from assembly.py
+from guideframe.utils import get_env_settings, guide_step  # Importing the guide_step and get_env_settings functions from guideframe_utils.py
 
 
 # This function will run the full script

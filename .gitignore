@@ -3,9 +3,11 @@
 .venv
 *.mp4
 *.mp3
+*.tar.gz
+*.whl
 tts_audio
 lib
 bin
 include
-__pycache__
-.vscode
+__pycache__/
+.vscode/
