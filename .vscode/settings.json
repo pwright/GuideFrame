@@ -1,6 +1,0 @@
-{
-    "python.experiments.optOutFrom": [
-        "pythonTerminalEnvVarActivation"
-    ],
-    "python.terminal.activateEnvironment": false
-}
