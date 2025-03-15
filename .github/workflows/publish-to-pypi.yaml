@@ -1,0 +1,37 @@
+name: Publish to PyPI
+
+# Trigger the workflow on push of a tag that starts with "v"
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+# All jobs in the workflow
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    # The individual steps that make up the job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      # Installing Poetry given its use as the package manager
+      - name: Install Poetry
+        run: pip install poetry
+
+      # Install the dependencies and build the package (from the pyproject.toml file)
+      - name: Install dependencies
+        run: poetry install
+
+      # Build the package and publish it to PyPI
+      - name: Build and Publish to PyPI
+        run: |
+          poetry build
+          poetry publish --no-interaction
