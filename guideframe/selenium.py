@@ -38,7 +38,7 @@ def driver_setup(driver_location):
 # Function to open a URL
 def open_url(driver, target):
     driver.get(target)
-    sleep(2)  # Give the page time to load
+    # sleep(1)  # Give the page time to load
 
 
 # Function to set window size
@@ -169,6 +169,7 @@ def take_screenshot(driver, file_name="screenshot.png"):
         print(f"Error taking screenshot: {e}")
         raise
 
+
 # Function to select a dropdown option by visible text
 def select_dropdown_option(driver, dropdown_id, visible_text):
     try:
@@ -194,3 +195,39 @@ def click_button_by_span_text(driver, span_text):
     except Exception as e:
         print(f"Error clicking button with span text '{span_text}': {e}")
         raise
+    
+    
+# Function to click an element by its XPath
+def click_element_by_xpath(driver, xpath):
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, xpath))
+        )
+        element.click()
+    except Exception as e:
+        print(f"Error clicking element with xpath '{xpath}': {e}")
+        raise
+
+
+# Function to hover over an element by its XPath
+def hover_over_element_by_xpath(driver, xpath):
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, xpath))
+        )
+        actions = ActionChains(driver)
+        actions.move_to_element(element).perform()
+    except Exception as e:
+        print(f"Error hovering over element with xpath '{xpath}': {e}")
+        raise
+    
+    
+# Function to highlight code on GitHub.com (useful for code walkthroughs)
+def highlight_github_code(driver, target):
+    driver.get(target)
+    driver.refresh() # Refresh the page to ensure the code is highlighted
+
+
+# Function to sleep for a specified number of seconds (added to negate the need to import time)    
+def sleep_for(seconds):
+    sleep(seconds)
