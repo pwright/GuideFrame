@@ -5,4 +5,5 @@ theme: just-the-docs
 url: https://chipspeak.github.io/GuideFrame
 
 aux_links:
-  Template Repository: https://github.com/chipspeak/GuideFrame
+  GuideFrame on GitHub: https://github.com/chipspeak/GuideFrame
+  GuideFrame on PyPI: https://pypi.org/project/guideframe
