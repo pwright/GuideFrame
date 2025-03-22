@@ -17,7 +17,7 @@ def start_ffmpeg_recording(output_file, input_format, input_display):
         '-vcodec', 'libxvid',         # Video codec
         '-preset', 'fast',            # Preset for encoding speed
         '-b:v', '3000k',              # Bitrate
-        '-pix_fmt', 'yuv420p',        # Pixel format
+        '-pix_fmt', 'yuv420p',        # Pixel format                 
         output_file                   # Output file path
     ]
     process = subprocess.Popen(command, stdin=subprocess.PIPE)
