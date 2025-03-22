@@ -1,6 +1,6 @@
 [project]
 name = "guideframe"
-version = "0.5.1"
+version = "0.5.2"
 description = "A tool to generate reusable software walkthrough videos via  code."
 authors = [
     {name = "Pat O'Connor"}
