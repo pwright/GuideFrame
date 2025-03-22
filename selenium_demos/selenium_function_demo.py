@@ -82,7 +82,7 @@ def selenium_automation_tests():
        '''
        guide_step(
            8,
-           lambda: hover_over_element(driver, "https://magento.softwaretestingboard.com/sprite-yoga-companion-kit.html")
+           lambda: hover_over_element_by_xpath(driver, '//*[@id="maincontent"]/div[3]/div[1]/div[3]/ol/li[1]/div/a/span/span/img')
        )
 
 

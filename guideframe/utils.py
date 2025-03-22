@@ -54,12 +54,12 @@ def guide_step(step_number, *actions, order="action-after-vo"):
     if order == "action-before-vo":
         for action in actions:
             action()
-            time.sleep(1)
+            # time.sleep(1)
         generate_voicover(md_file, step_number)
     else:  # Default order is action-after-vo
         generate_voicover(md_file, step_number)
         for action in actions:
             action()
-            time.sleep(1)
+            # time.sleep(1)
 
     stop_ffmpeg_recording(step)
