@@ -3,7 +3,7 @@ name: GuideFrame Video Render
 on: [push]
 # All jobs in the workflow
 jobs:
-  tutors-test:
+  render-tutors-demo:
     runs-on: ubuntu-latest
     # steps to run
     steps:
@@ -31,10 +31,10 @@ jobs:
         nohup Xvfb :99 -screen 0 1920x1080x24 &
         
         # Run the Python script
-        python3 tutors_test.py github
+        python3 guideframe_tutors_demo.py github
     # Upload the screen recording as an artifact
     - name: Upload screen recording as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: tutors-test
-        path: ./tutors_test*.mp4
+        name: render-tutors-demo
+        path: ./guideframe_tutors_demo*.mp4

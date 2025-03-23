@@ -3,17 +3,8 @@ from guideframe.assembly import assemble  # Importing the assemble_clips functio
 from guideframe.utils import guide_step, get_env_settings  # Importing the guide_step and get_env_settings functions from guideframe_utils.py
 
 
-'''
-As of GUIDEFRAME-31 as much logic as possible has been moved to external files to aid legibility
-and promote the ability to have easily create a new test without having to adjust the GuideFrame logic itself.
-This version also features the markdown extraction logic from the audio.py file in addition to a utils function for grabbing
-env variables related to inputs for the ffmpeg recording.
-'''
-
 # Function to run the main walkthrough section
 def guideframe_script():
-    # Main walkthrough logic here divided into steps etc (will hopefully be more legible after future refactors)
-    #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     try:
         '''
         Setup - Setup driver and Open Tutors.dev and set window size etc
@@ -29,7 +20,7 @@ def guideframe_script():
         '''
         guide_step(
             1, 
-            lambda: None
+            lambda: None,
             )
         
         '''
@@ -38,8 +29,10 @@ def guideframe_script():
         guide_step(
             2,
             lambda: click_element(driver, "span.ml-2.hidden.text-sm.font-bold.md\\:block"),
+            lambda: sleep_for(0.5),
             lambda: click_element(driver, "label[data-testid='segment-item']"),
-            lambda: click_element(driver, "span.ml-2.hidden.text-sm.font-bold.md\\:block")
+            lambda: sleep_for(0.5),
+            lambda: click_element(driver, "span.ml-2.hidden.text-sm.font-bold.md\\:block"),
             )
 
         '''
@@ -47,7 +40,7 @@ def guideframe_script():
         '''
         guide_step(
             3,
-            lambda: hover_and_click(driver, "/course/tutors-reference-manual")
+            lambda: hover_and_click(driver, "/course/tutors-reference-manual"),
             )
 
         '''
@@ -96,22 +89,44 @@ def guideframe_script():
             )
 
         '''
-        Step 9 - Retuning to the original card
+        Step 9 - Click the search button
         '''
         guide_step(
             9,
-            lambda: scroll_to_element(driver, "/note/tutors-reference-manual/unit-0-getting-started/note-01-getting-started"),
-            lambda: hover_and_click(driver, "/note/tutors-reference-manual/unit-0-getting-started/note-01-getting-started")
+            lambda: click_element_by_xpath(driver, '/html/body/div[1]/div[1]/header/header/section/div[3]/div[1]/div[3]/button/div/span[2]'),
             )
+        
+        '''
+        Step 10 - Search for a term
+        '''
+        guide_step(
+            10,
+            lambda: type_into_field(driver, "search", "card"),
+            )
+        
+        '''
+        Step 11 - Open the search result in a new tab
+        '''
+        guide_step(
+            11,
+            lambda: open_link_in_new_tab(driver, "https://tutors.dev/note/tutors-reference-manual/unit-1-fundamentals/note-02-cards")
+        )
+        
+        '''
+        Step 12 - End demo
+        '''
+        guide_step(
+            12,
+            lambda: None
+        )
+        
 
     finally:
         print("Script complete -> moving to assembly")
         driver.quit()
 
-# End of walkthrough section
-#----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# Main function to run the test and assemble the clips (now passing the number of steps to the assembly function)
+# Main function to run the test and assemble the clips
 if __name__ == "__main__":
     guideframe_script()
-    assemble(9)
+    assemble(12)
