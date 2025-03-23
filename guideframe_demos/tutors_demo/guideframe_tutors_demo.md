@@ -20,7 +20,7 @@ Now let's move on to the simple starter card.
 Let's continue to the alternative starter card. Before using the scroll to element function to move to the reference course.
 
 ## Step 8
-In this case, we use this function to access an element that isn't in the display window.
+In this case, we use this function to access an element that may not be in the display window.
 
 ## Step 9
 Let's use the click element by xpath function. We'll use it to access the search bar at the top of the screen.

@@ -31,10 +31,10 @@ jobs:
         nohup Xvfb :99 -screen 0 1920x1080x24 &
         
         # Run the Python script
-        python3 guideframe_tutors_demo.py github
+        python3 -m guideframe_demos.tutors_demo.guideframe_tutors_demo github
     # Upload the screen recording as an artifact
     - name: Upload screen recording as artifact
       uses: actions/upload-artifact@v4
       with:
         name: render-tutors-demo
-        path: ./guideframe_tutors_demo*.mp4
+        path: guideframe_demos/tutors_demo/guideframe_tutors_demo*.mp4
