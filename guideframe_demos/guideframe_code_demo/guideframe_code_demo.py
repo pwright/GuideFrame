@@ -6,7 +6,7 @@ from guideframe.utils import guide_step, get_env_settings  # Importing the guide
 def guideframe_script():
     try:
         '''
-        Setup - Setup driver and Open Tutors.dev and set window size etc
+        Setup - Setup driver, Open GuideFrame repo and set window size etc
         '''
         env_settings = get_env_settings()  # Getting the environment settings
         driver_location = env_settings["driver_location"]  # Getting the driver location from the settings
@@ -286,15 +286,37 @@ def guideframe_script():
             order="action-before-vo"
             )
         
+#-------------------Conclusion-------------------# 
+
         '''
-        Step 28 - End of script
+        Step 28 - GitHub page
         '''
         guide_step(
             28,
+            lambda: open_url(driver, "https://github.com/chipspeak/GuideFrame"),
+            order="action-before-vo"
+            )
+        
+        '''
+        Step 29 - PyPi page
+        '''
+        guide_step(
+            29,
             lambda: open_url(driver, "https://pypi.org/project/guideframe/"),
             order="action-before-vo"
             )
-
+        
+        '''
+        Step 30 - Docs page
+        '''
+        guide_step(
+            30,
+            lambda: open_url(driver, "https://chipspeak.github.io/GuideFrame/"),
+            order="action-before-vo"
+            )
+        
+#-------------------Walkthrough Complete-------------------# 
+    
     finally:
         print("Script complete -> moving to assembly")
         driver.quit()
@@ -303,4 +325,4 @@ def guideframe_script():
 # Main function to run the test and assemble the clips (now passing the number of steps to the assembly function)
 if __name__ == "__main__":
     guideframe_script()
-    assemble(28)
+    assemble(30)

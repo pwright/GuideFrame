@@ -14,13 +14,13 @@ All the python script requires is the relevant imports as seen at the top of the
 Let's examine steps 1 and 2 to illustrate the syntax of a GuideFrame step. Each step takes a number as an argument in addition to a lambda function and an opptional argument for the order of the voicever relative to the interactions. In the case of step 1, lambda is set to none in order to hang on the main webpage while the voiceover is performed. Step 2 features a call to the click button by span text function to click the agree button. 
 
 ## Step 6
-Lets skip to step 14 to demonstrate the ability to pass multiple actions. In this case, we're filling review fields on the test site. A user can pass as many actions to a step as they wish and GuideFrame will iterate them.
+Lets skip to step 14 to demonstrate the ability to pass multiple actions. In this case, we're filling review fields on the test site. A user can pass as many actions to a step as they wish and GuideFrame will iterate through them.
 
 ## Step 7
-Once a user has defined all of their guide steps within a function, they can simply call this function within main. The user should then pass the number of steps to the assemble function from the GuideFrame library. This function carries out the assembly of all generated audio and video segments. Now that we've got a high level understanding of GuideFrame, let's take a look at the underlying code.
+Once a user has defined all of their guide steps within a function, they should call it within main. They should then pass the number of steps to the assemble function. This function carries out the assembly of all generated audio and video segments. Now that we've got a high level understanding of GuideFrame, let's take a look at the underlying code.
 
 ## Step 8
-Let's start off by examining one of the selenium functions. The selenium file acts as an SDK which allows user's to more easily create individual interactions. There are numerous actions available but for this demonstration we'll use a small subset. The first one we'll look at is the open link in new tab function. Like many of these functions, its wrapped in a try block with exception handling. This ensures any failures propagate up to the GitHub action. The function takes the webdriver and a h ref as an argument. The h ref is then passed to selenium's native functions. It opens the link and then switches to the most recently opened tab. 
+Let's start off by examining one of the selenium functions. The selenium file acts as an SDK which allows users to more easily create individual interactions. There are numerous actions available but for this demonstration we'll use a small subset. The first one we'll look at is the open link in new tab function. Like most of these functions, its wrapped in a try block with exception handling. The function takes the webdriver and a h ref as an argument. The h ref is then passed to selenium's native functions. It opens the link and then switches to the most recently opened tab. 
 
 ## Step 9
 Lets demonstrate it by using the magento test site. We'll use the function to open the test site in a new tab and switch to it.
@@ -44,7 +44,7 @@ The final function we'll examine allows a user to hover over elements. This func
 When defining this particular step, we also pass sleep functions to allow space between selections. 
 
 ## Step 16
-Now that we've demonstrated some of the functions, lets dive a little deeper into the core logic that makes this possible. The utils file contains much of the logic relating to the guide steps themselves. The function seen here uses script arguments to assign appropriate variables.
+Now that we've demonstrated some of the functions, lets dive a little deeper into the code that makes this possible. The utils file contains much of the logic relating to the guide steps themselves. The function seen here uses script arguments to extract environment variables.
 
 ## Step 17
 This pair of functions simply serve to extract the scripts name for use in additional logic.
@@ -71,16 +71,22 @@ The assemble function takes the steps number and uses it to loop through all of 
 Finally, a cleanup loop removes all of the files generated through this process. 
 
 ## Step 25
-The final layer of guideframe is its use as a git hub action. This allows users to run guideframe on repository updates in order to ensure new render on changes. This removes the need for local rendering by an engineer. It also ensures that breaking changes to guideframe or the product it demos are easily caught. 
+The final layer of guideframe is its use as a git hub action. This allows users to run guideframe on repository updates.
 
 ## Step 26
-This render workflow activates on push events. It spins up an ubuntu git hub runner and installs the requirements needed to run guideframe. The pip install commands here don't install the guideframe package. This is because this workflow runs within the source repository. Within the template repository, these python installations are replaced with pip install guideframe.
+This render workflow activates on push events. It spins up an ubuntu git hub runner and installs the requirements needed to run guideframe. Note the pip install commands here don't install the guideframe package. This is because this workflow runs within the source repository. Within the template repository, these python installations are replaced with pip install guideframe.
 
 ## Step 27
-Once the environment is set up, the virtual display is started. The tutors test is then run before a final step uploads this output as an artifact. This allows the user to download the final mp4 from the workflow. This then completes the full GuideFrame pipeline.
+Once the environment is set up, the virtual display is started. The tutors demo is then run before a final step uploads this output as an artifact. This allows the user to download the final mp4 from the workflow.
 
 ## Step 28
-This concludes the walkthrough. Be sure to check out the project on GitHub or PyPy.
+This concludes the code walkthrough. GuideFrame is available on GitHub via the link seen here.
+
+## Step 29
+It can also be found here on PyPi.
+
+## Step 30
+And finally, the official documentation can be found here. Thanks for watching!
 
 
 
