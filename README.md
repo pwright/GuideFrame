@@ -33,7 +33,7 @@ If you wish to view the syntax of GuideFrame through the lense of examples, see 
 
 **GuideFrame Code Walkthrough** - An elaborate GuideFrame walkthrough where it works through its own code.
 * [GuideFrame Code Walkthrough script](https://github.com/chipspeak/GuideFrame/blob/main/guideframe_demos/guideframe_code_demo/guideframe_code_demo.py)
-* [GuideFrame Code Walkthrough mardkwon](https://github.com/chipspeak/GuideFrame/blob/main/guideframe_demos/guideframe_code_demo/guideframe_code_demo.md)
+* [GuideFrame Code Walkthrough markdown](https://github.com/chipspeak/GuideFrame/blob/main/guideframe_demos/guideframe_code_demo/guideframe_code_demo.md)
 * [GuideFrame Code Walkthrough video](https://www.youtube.com/watch?v=EZVsS7ulclA)
 
 ## Additional Links
