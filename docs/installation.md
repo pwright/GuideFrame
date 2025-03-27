@@ -26,7 +26,7 @@ GuideFrame is packaged and available on pypi. It can be installed using:
 
 Once installed, you will need to install the non-python dependencies. A setup script is packaged with GuideFrame for this. You can simply copy it from the GuideFrame repo and run it locally or you can run the following:
 
-```bash $(python -c "import guideframe, os; print(os.path.join(os.path.dirname(guideframe.__file__), 'setup_env.sh'))")```
+```$(python -c "import guideframe, os; print(os.path.join(os.path.dirname(guideframe.__file__), 'setup_env.sh'))")```
 
 Alternatively, depending on you operating system, you can run the following to install the package and dependencies in one:
 
@@ -42,6 +42,6 @@ Alternatively, depending on you operating system, you can run the following to i
 
 You will then need to create a GuideFrame script. See the repository link above for a template. Once this script has been created, you can run it using:
 
-```bash python <guideframe_script_name> <system_argument>```
+```python <guideframe_script_name> <system_argument>```
 
 Note: GuideFrame currently supports ```macos``` as its system argument. You can also pass: ```github``` to run on an ubuntu system but this has not been tested outside of virtual machines.
