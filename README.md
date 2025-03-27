@@ -2,14 +2,14 @@
 
 GuideFrame is a tool which allows software developers to produce detailed walkthrough videos of their projects using python code. It can be run locally, provided you have the required packages installed, or can be used as a GitHub action.
 
-It uses a selection of open-source software to record a users screen, perform scripted UI interactions and generate a matching voiceover based on a user-defined markdown file.
+It uses a selection of open-source software to record a users screen, perform scripted UI interactions and generate a matching voiceover based on a user-defined markdown file. To see GuideFrame in action you can visit the [Demos section of the GuideFrame Site](https://chipspeak.github.io/GuideFrame/demos/).
 
 ## Installation
 
 GuideFrame is currently available on PyPi. It can be installed using:`pip install guideframe`.
 While GuideFrame can be run locally, given the variance in development environment, using it as part of a GitHub action is the recommended approach.
 
-More detailed installation instructions can be found on the official docs page [here](https://chipspeak.github.io/GuideFrame/installation/).
+More detailed installation instructions can be found on the docs page [here](https://chipspeak.github.io/GuideFrame/installation/).
 
 ## Getting Started
 
