@@ -17,7 +17,7 @@ The below video serves as a demonstration of GuideFrame via the open-source educ
   </iframe>
 </div>
 
-## GuideFrame Code Walkthrough Script
+## Tutors Demo Script
 ```python
 
 from guideframe.selenium import * # Moved all selenium functions to external file
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     assemble(12)
 ```
 
-## GuideFrame Code Walkthrough Markdown
+## Tutors Demo Markdown
 
 ```markdown
 ## Step 1 
