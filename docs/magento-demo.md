@@ -17,7 +17,7 @@ The below video serves as a demonstration of GuideFrame's Selenium SDK via the M
   </iframe>
 </div>
 
-## GuideFrame Code Walkthrough Script
+## Magento Demo Script
 ```python
 
 from guideframe.selenium import * # Importing all functions from selenium_functions.py
@@ -211,7 +211,7 @@ if __name__ == "__main__":
    assemble(18)
 ```
 
-## GuideFrame Code Walkthrough Markdown
+## Magento Demo Markdown
 
 ```markdown
 ## Step 1
