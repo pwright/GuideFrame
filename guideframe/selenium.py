@@ -16,24 +16,50 @@ Additional functions will be added as they are required before a doc is prepared
 '''
 
 # Function to setup the driver and return it for initialization in main scripts
-def driver_setup(driver_location):
-    # Setting up with Chrome options and the ChromeDriver service
-    options = Options()
-    options.add_argument("usr/bin/google-chrome")
-    options.add_argument("--incognito")
+from shutil import which
+import os
 
-    # Disable the "Chrome is being controlled by automated test software" banner
+def driver_setup(driver_location=None):
+    """
+    Cross-distro WebDriver bootstrap.
+    - Picks a Chromium/Chrome binary from $GUIDEFRAME_BROWSER, or PATH.
+    - Picks a chromedriver from arg, $GUIDEFRAME_CHROMEDRIVER, or PATH.
+    Raises RuntimeError with actionable guidance if either is missing.
+    """
+    options = Options()
+    options.add_argument("--incognito")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
 
-    # Specify the path to ChromeDriver
-    service = Service(driver_location) 
+    # Browser binary (prefer env override)
+    binary = (
+        os.environ.get("GUIDEFRAME_BROWSER")
+        or which("chromium")
+        or which("google-chrome-stable")
+        or which("google-chrome")
+    )
+    if binary:
+        options.binary_location = binary
+    else:
+        raise RuntimeError(
+            "Chromium/Chrome not found on PATH. Install `chromium` (Fedora) or `google-chrome-stable`, "
+            "or set GUIDEFRAME_BROWSER=/full/path/to/browser"
+        )
 
-    # Initialize the WebDriver
-    driver = webdriver.Chrome(service=service, options=options)
+    # Chromedriver location
+    drv = (
+        driver_location
+        or os.environ.get("GUIDEFRAME_CHROMEDRIVER")
+        or which("chromedriver")
+    )
+    if not drv:
+        raise RuntimeError(
+            "chromedriver not found. On Fedora: `sudo dnf install -y chromedriver`. "
+            "Or set GUIDEFRAME_CHROMEDRIVER=/full/path/to/chromedriver"
+        )
 
-    return driver
-
+    service = Service(drv)
+    return webdriver.Chrome(service=service, options=options)
 
 # Function to open a URL
 def open_url(driver, target):

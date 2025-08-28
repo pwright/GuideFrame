@@ -6,10 +6,77 @@ It uses a selection of open-source software to record a users screen, perform sc
 
 ## Installation
 
-GuideFrame is currently available on PyPi. It can be installed using:`pip install guideframe`.
-While GuideFrame can be run locally, given the variance in development environment, using it as part of a GitHub action is the recommended approach.
+GuideFrame can be installed in several ways depending on your use case:
 
-More detailed installation instructions can be found on the docs page [here](https://chipspeak.github.io/GuideFrame/installation/).
+### Quick Start with PyPI (Recommended for Users)
+
+```bash
+pip install guideframe
+```
+
+**Note:** You'll also need to install system dependencies (see below) for GuideFrame to work properly.
+
+### Development Installation
+
+For contributors or advanced users who want to modify GuideFrame:
+
+```bash
+# Clone the repository
+git clone https://github.com/chipspeak/GuideFrame.git
+cd GuideFrame
+
+# Install with pip in editable mode
+pip install -e .
+```
+
+### Automated Setup (Linux)
+
+For the easiest setup on Linux systems, use the included Justfile automation:
+
+```bash
+# Install Just first: https://github.com/casey/just
+# Then run automated setup
+just setup        # Install system dependencies
+just install-deps # Create virtual environment and install Python dependencies
+```
+
+### System Dependencies
+
+GuideFrame requires several system packages to function:
+
+**For Fedora/RHEL/CentOS:**
+```bash
+sudo dnf install -y ffmpeg xorg-x11-server-Xvfb chromium chromedriver python3-venv
+```
+
+**For Ubuntu/Debian:**
+```bash
+sudo apt-get update
+sudo apt-get install -y ffmpeg xvfb chromium-driver chromium-browser python3-venv
+```
+
+**For Arch Linux:**
+```bash
+sudo pacman -Syu --noconfirm ffmpeg xorg-server-xvfb chromium chromedriver python-virtualenv
+```
+
+### GitHub Actions (Recommended for CI/CD)
+
+GuideFrame works excellently as a GitHub Action. Use the [GuideFrame Template Repository](https://github.com/chipspeak/GuideFrame-Template) to get started quickly without dealing with local dependencies.
+
+### Verification
+
+To verify your installation works:
+
+```bash
+# Start virtual display (Linux only)
+just start-xvfb  # or manually: Xvfb :99 -screen 0 1920x1080x24 &
+
+# Run a demo
+just run guideframe_demos/tutors_demo/guideframe_tutors_demo.py
+```
+
+For more detailed installation instructions, visit the [official documentation](https://chipspeak.github.io/GuideFrame/installation/).
 
 ## Getting Started
 
@@ -51,6 +118,21 @@ If you wish to view the syntax of GuideFrame through the lense of examples, see 
 ## How To Contribute
 GuideFrame is an open-source project and contributions are greatly encouraged. Open an issue thread or fork the repo and open a pull request if you've got suggestions, fixes etc. 
 
+## Environment Configuration
 
+### Optional Environment Variables
 
+You can customize GuideFrame's behavior with these environment variables:
 
+```bash
+# Override browser and driver paths if needed
+export GUIDEFRAME_BROWSER=/usr/bin/chromium
+export GUIDEFRAME_CHROMEDRIVER=/usr/bin/chromedriver
+
+# Override FFmpeg codec (default is libx264)
+export GUIDEFRAME_FFMPEG_CODEC=libxvid
+```
+
+### Notes
+- Screen capture uses `Xvfb :99` with `x11grab`, which works on both Wayland and X11 systems
+- `requirements.txt` contains only Python dependencies; system packages must be installed separately via your distribution's package manager

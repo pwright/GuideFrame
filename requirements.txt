@@ -1,8 +1,5 @@
-ffmpeg
-xvfb
-chromium-driver
-chromium-browser
-selenium
-ffmpeg-python
-mutagen
-gTTS
+selenium==4.27.1
+ffmpeg-python==0.2.0
+mutagen==1.47.0
+gTTS==2.5.4
+requests>=2.25.0

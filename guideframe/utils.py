@@ -2,13 +2,14 @@ from guideframe.audio import generate_voicover
 from guideframe.video import start_ffmpeg_recording, stop_ffmpeg_recording
 import time
 import sys
+import os
 
 # Function to get the environment settings based on the argument provided to the script
 def get_env_settings():
     if len(sys.argv) > 1:
         env = sys.argv[1]  # Getting the environment argument
     else:
-        print("No environment argument provided. Use 'macos' or 'github'.")
+        print("No environment argument provided. Use 'macos', 'github', or 'linux'.")
         sys.exit(1)
 
     # Define settings based on environment
@@ -24,8 +25,14 @@ def get_env_settings():
             "input_display": ":99.0",
             "driver_location": "/usr/bin/chromedriver"
         }
+    if env == "linux":  # Fedora/Wayland-friendly: use Xvfb :99
+        return {
+            "input_format": "x11grab",
+            "input_display": ":99.0",
+            "driver_location": os.environ.get("GUIDEFRAME_CHROMEDRIVER", "/usr/bin/chromedriver")
+        }
     else:
-        print("Invalid environment specified. Use 'macos' or 'github'.")
+        print("Invalid environment specified. Use 'macos', 'github', or 'linux'.")
         sys.exit(1)
 
 

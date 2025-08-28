@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 '''
 Starts recording the screen with FFmpeg using ffmpeg-python wrapper
@@ -14,7 +15,7 @@ def start_ffmpeg_recording(output_file, input_format, input_display):
         '-video_size', '1920x1080',   # Resolution
         '-framerate', '30',           # Frame rate
         '-i', input_display,          # Input display (1 or :99.0 for GitHub actions)
-        '-vcodec', 'libxvid',         # Video codec
+        '-vcodec', os.environ.get('GUIDEFRAME_FFMPEG_CODEC', 'libx264'),         # Video codec
         '-preset', 'fast',            # Preset for encoding speed
         '-b:v', '3000k',              # Bitrate
         '-pix_fmt', 'yuv420p',        # Pixel format                 
