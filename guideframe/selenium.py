@@ -30,6 +30,12 @@ def driver_setup(driver_location=None):
     options.add_argument("--incognito")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
+    
+    # Ensure Chrome runs on the virtual display
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--remote-debugging-port=9222")
 
     # Browser binary (prefer env override)
     binary = (
@@ -59,6 +65,25 @@ def driver_setup(driver_location=None):
         )
 
     service = Service(drv)
+    
+    # Ensure we're using the virtual display
+    current_display = os.environ.get('DISPLAY', ':0')
+    if current_display != ':0':  # If we're not on the physical display
+        print(f"Using virtual display: {current_display}")
+        # Set additional environment variables for Chrome
+        os.environ['DISPLAY'] = current_display
+        
+        # Also set it in the service environment
+        service.environment = os.environ.copy()
+        service.environment['DISPLAY'] = current_display
+        
+        # Force Chrome to use the virtual display by setting environment in options
+        options.add_argument(f"--display={current_display}")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--remote-debugging-port=9222")
+    
     return webdriver.Chrome(service=service, options=options)
 
 # Function to open a URL

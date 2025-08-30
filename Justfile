@@ -50,6 +50,8 @@ stop-xvfb:
 # Run a demo or your script in linux mode using Xvfb  
 # Example: just run guideframe_demos/tutors_demo/guideframe_tutors_demo.py
 run file="guideframe/github_automation_tests.py":
+    # Ensure virtual display is running
+    just start-xvfb
     . {{venv}}/bin/activate
     export DISPLAY=$(cat .display 2>/dev/null || echo ":99")
     export GUIDEFRAME_BROWSER="${GUIDEFRAME_BROWSER:-$(command -v chromium || command -v google-chrome-stable || command -v google-chrome || echo "")}"
