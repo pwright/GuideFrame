@@ -34,9 +34,9 @@ def pull_vo_from_markdown(md_file, step_number):
     Regex pattern breakdown:
 
     ## Step {step_number} -> The step heading to match
-    \s* -> Any whitespace characters before the content
+    \\s* -> Any whitespace characters before the content
     (.*?) -> The content under the step heading
-    (?=\n##|\Z) -> A lookahead to match the next step heading (##) or the end of the file
+    (?=\\n##|\\Z) -> A lookahead to match the next step heading (##) or the end of the file
     '''
 
     # Define the regex pattern for the step heading (explained above)
@@ -49,10 +49,50 @@ def pull_vo_from_markdown(md_file, step_number):
     return match.group(1).strip() if match else None
 
 
+# Function to extract markdown content from Python files containing embedded markdown
+def pull_vo_from_python_file(py_file, step_number):
+    # Open the Python file and read
+    with open(py_file, "r", encoding="utf-8") as file:
+        py_content = file.read()
+    
+    '''
+    Look for markdown content embedded in the Python file.
+    This could be in:
+    1. Triple-quoted strings containing markdown
+    2. Multi-line comments with markdown
+    3. A specific markdown section
+    '''
+    
+    # First, try to find markdown content in triple-quoted strings or comments
+    # Look for pattern like '''markdown or """markdown followed by step content
+    markdown_pattern = r'(?:\'\'\'|""")[\s]*markdown[\s]*\n(.*?)(?:\'\'\'|""")'
+    markdown_match = re.search(markdown_pattern, py_content, re.DOTALL | re.IGNORECASE)
+    
+    if markdown_match:
+        markdown_content = markdown_match.group(1)
+    else:
+        # If no explicit markdown block, look for step comments in the entire file
+        markdown_content = py_content
+    
+    # Define the regex pattern for the step heading
+    step_heading = rf"## Step {step_number}\s*(.*?)\s*(?=\n##|\Z)"
+    
+    # Search for the step heading
+    match = re.search(step_heading, markdown_content, re.DOTALL)
+    
+    # Return the content under the step heading if found
+    return match.group(1).strip() if match else None
+
+
 # Function to generate the voiceover (in order to avoid repetition in main script)
-def generate_voicover(md_file, step_number):
-    # Extract voiceover text from the .md file (hard coded for now as each test will need this function defined)
-    voiceover = pull_vo_from_markdown(md_file, step_number) # Passing the step number and file to the regex based function
+def generate_voicover(source_file, step_number):
+    # Check if source file is .py or .md
+    if source_file.endswith('.py'):
+        # Extract voiceover text from the .py file containing embedded markdown
+        voiceover = pull_vo_from_python_file(source_file, step_number)
+    else:
+        # Extract voiceover text from the .md file (original behavior)
+        voiceover = pull_vo_from_markdown(source_file, step_number)
 
     # Check if content was found
     if not voiceover:

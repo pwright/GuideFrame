@@ -25,10 +25,21 @@ def get_env_settings():
             "input_display": ":99.0",
             "driver_location": "/usr/bin/chromedriver"
         }
-    if env == "linux":  # Fedora/Wayland-friendly: use Xvfb :99
+    elif env == "linux":  # Fedora/Wayland-friendly: use display from .display file
+        # Read display from .display file, fallback to :0 if not found
+        try:
+            with open('.display', 'r') as f:
+                display = f.read().strip()
+                if display:
+                    input_display = f"{display}.0"
+                else:
+                    input_display = ":0.0"
+        except FileNotFoundError:
+            input_display = ":0.0"
+        
         return {
             "input_format": "x11grab",
-            "input_display": ":99.0",
+            "input_display": input_display,
             "driver_location": os.environ.get("GUIDEFRAME_CHROMEDRIVER", "/usr/bin/chromedriver")
         }
     else:
@@ -52,7 +63,8 @@ def guide_step(step_number, *actions, order="action-after-vo"):
     env_settings = get_env_settings()
     input_format = env_settings["input_format"]
     input_display = env_settings["input_display"]
-    md_file = extract_md_filename()
+    # Pass the Python script filename instead of markdown filename
+    script_file = sys.argv[0]
 
     # Start the recording for the step
     step = start_ffmpeg_recording(f"step{step_number}.mp4", input_format, input_display)
@@ -62,9 +74,9 @@ def guide_step(step_number, *actions, order="action-after-vo"):
         for action in actions:
             action()
             # time.sleep(1)
-        generate_voicover(md_file, step_number)
+        generate_voicover(script_file, step_number)
     else:  # Default order is action-after-vo
-        generate_voicover(md_file, step_number)
+        generate_voicover(script_file, step_number)
         for action in actions:
             action()
             # time.sleep(1)

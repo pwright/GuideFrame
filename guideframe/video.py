@@ -15,8 +15,7 @@ def start_ffmpeg_recording(output_file, input_format, input_display):
         '-video_size', '1920x1080',   # Resolution
         '-framerate', '30',           # Frame rate
         '-i', input_display,          # Input display (1 or :99.0 for GitHub actions)
-        '-vcodec', os.environ.get('GUIDEFRAME_FFMPEG_CODEC', 'libx264'),         # Video codec
-        '-preset', 'fast',            # Preset for encoding speed
+        '-vcodec', os.environ.get('GUIDEFRAME_FFMPEG_CODEC', 'libxvid'),         # Video codec
         '-b:v', '3000k',              # Bitrate
         '-pix_fmt', 'yuv420p',        # Pixel format                 
         output_file                   # Output file path
