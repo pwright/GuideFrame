@@ -7,18 +7,42 @@ permalink: audio
 ---
 
 # Audio
-The audio file contains functions designed to provide the voiceover for each GuideFrame step. It interacts with both `gTTS` and markdown in order to create these mp3 files. The following section will list each function contained within this file and provide some insight into its use and syntax.
+The audio file contains functions designed to provide the voiceover for each GuideFrame step. It interacts with Piper (local neural TTS) and markdown in order to create these mp3 files. The following section will list each function contained within this file and provide some insight into its use and syntax.
 
+## Voice Model Management
+
+Piper requires voice models to function. The system automatically downloads the `en_GB-alan-medium` voice model on first use to `~/.guideframe/voices/`. This ensures:
+- No voice models are committed to the repository
+- Users get high-quality neural TTS without manual setup
+- Offline operation after initial download
+
+### export_piper_tts()
+```python
+def export_piper_tts(text, file_name):
+```
+This function creates high-quality MP3 audio files using Piper's neural TTS engine. It:
+- Generates audio from text using the downloaded voice model
+- Creates a temporary WAV file for processing
+- Converts to MP3 using ffmpeg for universal compatibility
+- Automatically cleans up temporary files
+- Returns the path to the generated MP3 file
+
+**Parameters:**
+- `text` (str): The text to convert to speech
+- `file_name` (str): The output MP3 filename
+
+**Returns:** None (creates the MP3 file directly)
+
+**Example:**
+```python
+export_piper_tts("Hello, this is a test.", "test_output.mp3")
+```
 
 ### export_gtts()
 ```python
 def export_gtts(text, file_name):
-    tts = gTTS(text)
-    tts.save(file_name)
-    print("Exported", file_name)
 ```
-This function uses the `gTTS` python package in order to generate audio based on the user-prescribed text. It takes the `text` argument and passes it, along with a `file_name` to the native `gTTS` functions. This then writes an audio file, with the passed name and featuring the prescribed text, to the local directory.
-
+This function is maintained for backward compatibility but now uses Piper instead of gTTS.
 
 ### sleep_based_on_vo()
 ```python
@@ -32,47 +56,62 @@ This function is designed to prevent the main script's interactions from acceler
 ### pull_vo_from_markdown()
 ```python
 def pull_vo_from_markdown(md_file, step_number):
-    # Open the markdown file and read
-    with open(md_file, "r", encoding="utf-8") as file:
-        md_content = file.read()
+    # Open the markdown file and read its contents
+    with open(md_file, 'r') as f:
+        content = f.read()
     
-    '''
-    Regex pattern breakdown:
-
-    ## Step {step_number} -> The step heading to match
-    \s* -> Any whitespace characters before the content
-    (.*?) -> The content under the step heading
-    (?=\n##|\Z) -> A lookahead to match the next step heading (##) or the end of the file
-    '''
-
-    # Define the regex pattern for the step heading (explained above)
-    step_heading = rf"## Step {step_number}\s*(.*?)\s*(?=\n##|\Z)"
-
-    # Search the markdown content for the step heading
-    match = re.search(step_heading, md_content, re.DOTALL)
-
-    # Return the content under the step heading if found
-    return match.group(1).strip() if match else None
+    # Find the heading for the specified step
+    pattern = rf'^## Step {step_number}\s*$(.*?)(?=^## Step {step_number + 1}\s*$|$)'
+    match = re.search(pattern, content, re.MULTILINE | re.DOTALL)
+    
+    if match:
+        return match.group(1).strip()
+    else:
+        return None
 ```
-This function takes the `md_file` and `step_number` as arguments. It uses these to extract the text content of the markdown file by opening it and then using the `re` package to perform a regex parse (outlined in above code comments). This pattern ensures that the text must follow a `##` heading with text matching "Step n*". Provided a match is found, it is then returned.
+This function extracts voiceover text from markdown files. It searches for content under headings like "## Step 1", "## Step 2", etc., and returns the text content for the specified step number.
 
-
-### generate_voiceover()
+### pull_vo_from_python_file()
 ```python
-def generate_voicover(md_file, step_number):
-    # Extract voiceover text from the .md file
-    voiceover = pull_vo_from_markdown(md_file, step_number) # parsing the markdown
-
-    # Check if content was found
-    if not voiceover:
-        print(f"Warning: No content found for Step {step_number}")
-        return
-
-    # Export the voiceover to an MP3 file
-    export_gtts(voiceover, f"step{step_number}.mp3")
-    # Sleeping based on the length of the voiceover
-    sleep_based_on_vo(f"step{step_number}.mp3")
+def pull_vo_from_python_file(py_file, step_number):
+    # Open the python file and read its contents
+    with open(py_file, 'r') as f:
+        content = f.read()
+    
+    # Find the markdown comment for the specified step
+    pattern = rf'# Step {step_number}:(.*?)(?=# Step {step_number + 1}:|$)'
+    match = re.search(pattern, content, re.MULTILINE | re.DOTALL)
+    
+    if match:
+        return match.group(1).strip()
+    else:
+        return None
 ```
-This function brings the above functions together. It takes `md_file` and `step_number` as arguments before passing these into a call to `pull_vo_from_markdown()`. It then checks for the presence of resulting voiceover.
+This function extracts voiceover text from Python files that contain embedded markdown comments. It searches for comments like "# Step 1:", "# Step 2:", etc., and returns the text content for the specified step number.
 
-It then uses the `export_gtts()` function where it passes the voiceover created above along with a file name created using the `step_number` variable. Finally, it calls the `sleep_based_on_vo()` function to complete the generation cycle.
+### generate_voicover()
+```python
+def generate_voicover(source_file, step_number):
+```
+This function orchestrates the entire voiceover generation process for a single step. It:
+- Extracts voiceover text from either Python or markdown files
+- Generates MP3 audio using Piper TTS
+- Automatically sleeps for the duration of the generated audio
+- Handles both file types automatically
+
+**Parameters:**
+- `source_file` (str): Path to the source file (.py or .md)
+- `step_number` (int): The step number to generate voiceover for
+
+**Example:**
+```python
+generate_voicover("tutorial.md", 1)
+```
+
+## Technical Details
+
+- **Audio Format**: MP3 (128kbps, 22050Hz, mono)
+- **Voice Model**: en_GB-alan-medium (British English, male voice)
+- **TTS Engine**: Piper (local neural TTS)
+- **Conversion**: WAV → MP3 using ffmpeg
+- **Compatibility**: Universal MP3 support across all platforms and media players

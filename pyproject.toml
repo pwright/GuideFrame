@@ -12,7 +12,7 @@ dependencies = [
     "selenium (==4.27.1)",
     "ffmpeg-python (==0.2.0)",
     "mutagen (==1.47.0)",
-    "gtts (==2.5.4)"
+    "piper-tts"
 ]
 
 

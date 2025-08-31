@@ -22,7 +22,7 @@ jobs:
           pip install selenium \
           ffmpeg-python \
           mutagen \
-          gTTS
+          piper-tts
     # Run the main script (starting the virtual display first)
     - name: Run Main Script with Display started
       run: |

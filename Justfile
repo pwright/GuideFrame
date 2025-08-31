@@ -31,6 +31,15 @@ setup:
       echo "Unsupported package manager. Install ffmpeg, Xvfb, Chromium, and chromedriver manually." >&2; \
     fi
 
+# Download Piper voice models manually (optional - will auto-download on first use)
+setup-voices:
+    mkdir -p ~/.guideframe/voices
+    echo "Downloading Piper voice model files..."
+    curl -L "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/alan/medium/en_GB-alan-medium.onnx" \
+         -o ~/.guideframe/voices/en_GB-alan-medium.onnx
+    echo "Voice model file downloaded to ~/.guideframe/voices/"
+    echo "Note: This will also happen automatically on first use"
+
 # Create venv and install python deps
 install-deps:
     {{py}} -m venv {{venv}}

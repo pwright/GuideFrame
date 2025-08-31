@@ -109,7 +109,7 @@ If you wish to view the syntax of GuideFrame through the lense of examples, see 
 
 ## Technologies Used
 * [`ffmpeg`](https://www.ffmpeg.org/) - used to capture the virtual displays and combine clips.
-* [`gTTS`](https://pypi.org/project/gTTS/) - used to generate the voiceover audio.
+* [`Piper`](https://github.com/OHF-Voice/piper1-gpl) - used to generate the voiceover audio (local neural TTS).
 * [`xvfb`](https://linux.die.net/man/1/xvfb) - used to provide a virtual display server.
 * [`mutagen`](https://mutagen.readthedocs.io/en/latest/index.html) - used to parse MP3 length.
 * [`chromium`](https://www.chromium.org/Home/) - to provide a browser for interactions.

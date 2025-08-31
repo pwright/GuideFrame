@@ -4,13 +4,10 @@ from guideframe.utils import guide_step, get_env_settings  # Importing the guide
 
 """markdown
 ## Step 1 
-This GuideFrame demo begins by opening tutors.dev. This is achieved by using the open u r l function prior to step 1.
+This GuideFrame demo begins by opening tutors.dev. 
 
 ## Step 2
-We can demonstrate the ability to pass multiple actions to GuideFrame by activating dark mode. This involves 3 calls to the click element function. We'll also call the sleep function for 0.5 seconds between each action.
-
-## Step 3
-Now let's use the hover and click function to move to the tutors reference manual.
+We can demonstrate the ability to pass multiple actions to GuideFrame by activating dark mode.
 
 """
 
@@ -46,13 +43,6 @@ def guideframe_script():
             lambda: click_element(driver, "span.ml-2.hidden.text-sm.font-bold.md\\:block"),
             )
 
-        '''
-        Step 3 - navigating to the docs page
-        '''
-        guide_step(
-            3,
-            lambda: hover_and_click(driver, "/course/tutors-reference-manual"),
-            )
 
 
 
@@ -64,4 +54,4 @@ def guideframe_script():
 # Main function to run the test and assemble the clips
 if __name__ == "__main__":
     guideframe_script()
-    assemble(12)
+    assemble(2)

@@ -187,33 +187,9 @@ def combine_all_videos(output_files, final_output):
             os.remove(file_list)
 
 
-# Combine individual video and audio for each step (obviously needs error handling etc but will do for now) (now taking in a number of clips rather than hardcoding in aid of tutors test)
-def assemble(number_of_steps):
-    # Ensure we're in the correct working directory
-    _ensure_working_directory()
-    
-    # Combine individual video and audio for each step by iterating through files and passing to above functions
-    clip_number = number_of_steps + 1
-    successful_combinations = 0
-    
-    for i in range(1, clip_number):
-        video_file = f"step{i}.mp4"
-        audio_file = f"step{i}.mp3"
-        output_file = f"output_step{i}.mp4"
-        # Call the function to combine video and audio
-        if assemble_audio_video(video_file, audio_file, output_file):
-            successful_combinations += 1
-        else:
-            print(f"Failed to combine step {i}")
-    
-    print(f"Successfully combined {successful_combinations} out of {number_of_steps} steps")
-    
-    if successful_combinations == 0:
-        print("Error: No video/audio combinations were successful. Cannot proceed with assembly.")
-        return False
-    
-    # Now that all video/audio combinations are complete, combine the output videos into the final one
-    output_files = [f"output_step{i}.mp4" for i in range(1, clip_number)]
+def _combine_all_videos(number_of_steps):
+    """Combine all output step videos into a single final video"""
+    output_files = [f"output_step{i}.mp4" for i in range(1, number_of_steps + 1)]
     
     # Check if any output files exist before attempting to combine
     existing_files = [f for f in output_files if os.path.exists(f)]
@@ -227,13 +203,14 @@ def assemble(number_of_steps):
     script_name = extract_script_name()
     # Creating a unique filename for the final output file via uuid and the extracted script name
     output_filename = f"{script_name}_{uuid.uuid4().hex[:6]}.mp4"
+    
     # Combining all the videos into the final output as a single video
     if combine_all_videos(existing_files, output_filename):
-        # Check if final_output exists and if so, clean up temporary files (the various mp3 and mp4 files we created)
+        # Check if final_output exists and if so, clean up temporary files
         if os.path.exists(output_filename):
             print("Final output created. Cleaning up temporary files...")
             # Cleanup loop
-            for i in range(1, clip_number):
+            for i in range(1, number_of_steps + 1):
                 step_video = f"step{i}.mp4"
                 step_audio = f"step{i}.mp3"
                 output_step = f"output_step{i}.mp4"
@@ -242,6 +219,7 @@ def assemble(number_of_steps):
                     print(f"Removed {step_video}")
                 if os.path.exists(step_audio):
                     os.remove(step_audio)
+                    print(f"Removed {step_audio}")
                 if os.path.exists(output_step):
                     os.remove(output_step)
                     print(f"Removed {output_step}")
@@ -253,3 +231,29 @@ def assemble(number_of_steps):
     else:
         print("Failed to combine videos. No cleanup performed.")
         return False
+
+
+# Combine individual video and audio for each step (obviously needs error handling etc but will do for now) (now taking in a number of clips rather than hardcoding in aid of tutors test)
+def assemble(number_of_steps):
+    # Ensure we're in the correct working directory
+    _ensure_working_directory()
+    
+    # Combine individual video and audio for each step by iterating through files and passing to above functions
+    clip_number = number_of_steps + 1
+    successful_combinations = 0
+    
+    for i in range(1, clip_number):
+        video_file = f"step{i}.mp4"
+        audio_file = f"step{i}.mp3"
+        output_file = f"output_step{i}.mp4"
+        
+        # Call the function to combine video and audio
+        if assemble_audio_video(video_file, audio_file, output_file):
+            successful_combinations += 1
+        else:
+            print(f"Error: Failed to combine {video_file} and {audio_file}")
+    
+    print(f"Successfully combined {successful_combinations} out of {number_of_steps} steps")
+    
+    # Now combine all the output files into one final video
+    _combine_all_videos(number_of_steps)

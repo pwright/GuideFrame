@@ -22,7 +22,7 @@ jobs:
           pip install selenium \
           ffmpeg-python \
           mutagen \
-          gTTS
+          piper-tts
     # Run the main automation script
     - name: Run Automation Test with Virtual Display
       run: |

@@ -11,3 +11,7 @@ bin
 include
 __pycache__/
 .vscode/
+
+# Voice models (Piper)
+~/.guideframe/voices/
+.guideframe/voices/
