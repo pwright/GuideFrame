@@ -73,7 +73,7 @@ To verify your installation works:
 just start-xvfb  # or manually: Xvfb :99 -screen 0 1920x1080x24 &
 
 # Run a demo
-just run guideframe_demos/tutors_demo/guideframe_tutors_demo.py
+DISPLAY=:99 PYTHONPATH=/home/paulwright/repos/GuideFrame python guideframe_demos/min/min.py linux
 ```
 
 For more detailed installation instructions, visit the [official documentation](https://chipspeak.github.io/GuideFrame/installation/).
